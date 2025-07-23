@@ -152,7 +152,7 @@
       return `${day} ${month} ${year}`;
     }
 
-    // PDF generation
+    // PDF generation with confirmation
     document.getElementById("myForm").addEventListener("submit", function(e) {
       e.preventDefault();
       const { jsPDF } = window.jspdf;
@@ -164,18 +164,35 @@
       const jamb = document.getElementById("jambScore").value;
       const course = document.getElementById("course").value;
       const year = document.getElementById("year").value;
-      const disability = document.getElementById("disability").value;
+      const disability = document.getElementById("disability").value || "None";
 
-      let y = 10;
-      doc.text(`Full Name: ${fullName}`, 10, y); y += 10;
-      doc.text(`State of Origin: ${state}`, 10, y); y += 10;
-      doc.text(`Date of Birth: ${dob}`, 10, y); y += 10;
-      doc.text(`JAMB Score: ${jamb}`, 10, y); y += 10;
-      doc.text(`Course Applied: ${course}`, 10, y); y += 10;
-      doc.text(`Year Applied: ${year}`, 10, y); y += 10;
-      doc.text(`Disability: ${disability || "None"}`, 10, y);
+      const confirmMsg = `
+Please confirm your details:
 
-      doc.save("Admission_Form.pdf");
+Full Name: ${fullName}
+State of Origin: ${state}
+Date of Birth: ${dob}
+JAMB Score: ${jamb}
+Course Applied: ${course}
+Year Applied: ${year}
+Disability: ${disability}
+
+Are all these details correct?`;
+
+      if (confirm(confirmMsg)) {
+        let y = 10;
+        doc.text(`Full Name: ${fullName}`, 10, y); y += 10;
+        doc.text(`State of Origin: ${state}`, 10, y); y += 10;
+        doc.text(`Date of Birth: ${dob}`, 10, y); y += 10;
+        doc.text(`JAMB Score: ${jamb}`, 10, y); y += 10;
+        doc.text(`Course Applied: ${course}`, 10, y); y += 10;
+        doc.text(`Year Applied: ${year}`, 10, y); y += 10;
+        doc.text(`Disability: ${disability}`, 10, y);
+
+        doc.save("Admission_Form.pdf");
+      } else {
+        alert("Please review and correct the form.");
+      }
     });
   </script>
 </body>
