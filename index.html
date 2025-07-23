@@ -148,5 +148,26 @@ document.getElementById("form").addEventListener("submit", function(e) {
   window.location.href = "confirm.html";
 });
   </script>
+  <script>
+  // Populate form if data exists (editing mode)
+  window.addEventListener('DOMContentLoaded', () => {
+    const data = JSON.parse(localStorage.getItem("formData"));
+    if (data) {
+      document.getElementById("fullName").value = data.fullName || "";
+      document.getElementById("state").value = data.state || "";
+
+      // Split DOB into parts
+      const [day, month, year] = data.dob.split("-");
+      document.getElementById("dobDay").value = parseInt(day) || "";
+      document.getElementById("dobMonth").value = parseInt(month) || "";
+      document.getElementById("dobYear").value = parseInt(year) || "";
+
+      document.getElementById("jamb").value = data.jamb || "";
+      document.getElementById("course").value = data.course || "";
+      document.getElementById("year").value = data.year || "";
+      document.getElementById("disability").value = data.disability || "";
+    }
+  });
+</script>
 </body>
 </html>
