@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form to PDF</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <h2>Admission Form</h2>
+  <form id="myForm">
+    <label>Full Name:<br><input type="text" id="fullName" required></label><br><br>
+    <label>State of Origin:<br><input type="text" id="state" required></label><br><br>
+    <label>Date of Birth:<br><input type="date" id="dob" required></label><br><br>
+    <label>JAMB Score:<br><input type="number" id="jambScore" required></label><br><br>
+    <label>Course Applied:<br><input type="text" id="course" required></label><br><br>
+    <label>Year Applied:<br><input type="number" id="year" required></label><br><br>
+    <label>Disability (if any):<br><input type="text" id="disability"></label><br><br>
+    <button type="submit">Download PDF</button>
+  </form>
+
+  <script>
+    document.getElementById("myForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      const fullName = document.getElementById("fullName").value;
+      const state = document.getElementById("state").value;
+      const dob = document.getElementById("dob").value;
+      const jamb = document.getElementById("jambScore").value;
+      const course = document.getElementById("course").value;
+      const year = document.getElementById("year").value;
+      const disability = document.getElementById("disability").value;
+
+      let y = 10;
+      doc.text(`Full Name: ${fullName}`, 10, y); y += 10;
+      doc.text(`State of Origin: ${state}`, 10, y); y += 10;
+      doc.text(`Date of Birth: ${dob}`, 10, y); y += 10;
+      doc.text(`JAMB Score: ${jamb}`, 10, y); y += 10;
+      doc.text(`Course Applied: ${course}`, 10, y); y += 10;
+      doc.text(`Year Applied: ${year}`, 10, y); y += 10;
+      doc.text(`Disability: ${disability || "None"}`, 10, y);
+
+      doc.save("Admission_Form.pdf");
+    });
+  </script>
+</body>
+</html>
+
