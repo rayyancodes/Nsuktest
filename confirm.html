@@ -1,54 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Confirm Details</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta charset="UTF-8">
+  <title>Confirm Your Details</title>
   <style>
-    body { font-family: Arial; padding: 20px; max-width: 500px; margin: auto; }
-    .box { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-    .box p { margin: 8px 0; }
-    button { width: 100%; padding: 12px; margin: 10px 0; border: none; font-size: 16px; }
-    .back { background: #ccc; }
-    .confirm { background: #007bff; color: white; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f2f2f2;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .info {
+      margin: 10px 0;
+      padding: 10px;
+      background: #f9f9f9;
+      border-left: 4px solid #007bff;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 15px;
+      background: #007bff;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
   </style>
 </head>
 <body>
-  <h2>Confirm Your Details</h2>
-  <div class="box" id="summary"></div>
+  <div class="container">
+    <h2>Confirm Your Details</h2>
+    <div class="info" id="fullName"></div>
+    <div class="info" id="state"></div>
+    <div class="info" id="dob"></div>
+    <div class="info" id="jamb"></div>
+    <div class="info" id="course"></div>
+    <div class="info" id="year"></div>
+    <div class="info" id="disability"></div>
 
-  <button class="confirm" onclick="downloadPDF()">Download PDF</button>
-  <button class="back" onclick="history.back()">Go Back</button>
+    <button onclick="window.location.href='index.html'">Edit</button>
+    <button onclick="downloadPDF()">Download PDF</button>
+  </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const data = {
-      "Full Name": params.get("fullName"),
-      "State of Origin": params.get("state"),
-      "Date of Birth": params.get("dob"),
-      "JAMB Score": params.get("jamb"),
-      "Course Applied": params.get("course"),
-      "Year Applied": params.get("year"),
-      "Disability": params.get("disability")
-    };
+    const data = JSON.parse(localStorage.getItem("formData"));
 
-    const summary = document.getElementById("summary");
-    Object.entries(data).forEach(([key, val]) => {
-      const p = document.createElement("p");
-      p.innerHTML = `<strong>${key}:</strong> ${val}`;
-      summary.appendChild(p);
-    });
+    if (data) {
+      document.getElementById("fullName").textContent = "Full Name: " + data.fullName;
+      document.getElementById("state").textContent = "State of Origin: " + data.state;
+      document.getElementById("dob").textContent = "Date of Birth: " + data.dob;
+      document.getElementById("jamb").textContent = "JAMB Score: " + data.jamb;
+      document.getElementById("course").textContent = "Course Applied: " + data.course;
+      document.getElementById("year").textContent = "Year Applied: " + data.year;
+      document.getElementById("disability").textContent = "Disability: " + (data.disability || "None");
+    }
 
     function downloadPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      let y = 10;
-      for (const [k, v] of Object.entries(data)) {
-        doc.text(`${k}: ${v}`, 10, y);
-        y += 10;
-      }
-      doc.save("Admission_Form.pdf");
+      const content = `
+        Full Name: ${data.fullName}\n
+        State of Origin: ${data.state}\n
+        Date of Birth: ${data.dob}\n
+        JAMB Score: ${data.jamb}\n
+        Course Applied: ${data.course}\n
+        Year Applied: ${data.year}\n
+        Disability: ${data.disability || "None"}
+      `;
+
+      const blob = new Blob([content], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "admission_form.pdf";
+      a.click();
+      URL.revokeObjectURL(url);
     }
   </script>
 </body>
-    </html>
+</html>
