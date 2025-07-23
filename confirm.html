@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Confirm Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; max-width: 500px; margin: auto; }
+    .box { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+    .box p { margin: 8px 0; }
+    button { width: 100%; padding: 12px; margin: 10px 0; border: none; font-size: 16px; }
+    .back { background: #ccc; }
+    .confirm { background: #007bff; color: white; }
+  </style>
+</head>
+<body>
+  <h2>Confirm Your Details</h2>
+  <div class="box" id="summary"></div>
+
+  <button class="confirm" onclick="downloadPDF()">Download PDF</button>
+  <button class="back" onclick="history.back()">Go Back</button>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const data = {
+      "Full Name": params.get("fullName"),
+      "State of Origin": params.get("state"),
+      "Date of Birth": params.get("dob"),
+      "JAMB Score": params.get("jamb"),
+      "Course Applied": params.get("course"),
+      "Year Applied": params.get("year"),
+      "Disability": params.get("disability")
+    };
+
+    const summary = document.getElementById("summary");
+    Object.entries(data).forEach(([key, val]) => {
+      const p = document.createElement("p");
+      p.innerHTML = `<strong>${key}:</strong> ${val}`;
+      summary.appendChild(p);
+    });
+
+    function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      let y = 10;
+      for (const [k, v] of Object.entries(data)) {
+        doc.text(`${k}: ${v}`, 10, y);
+        y += 10;
+      }
+      doc.save("Admission_Form.pdf");
+    }
+  </script>
+</body>
+    </html>
