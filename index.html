@@ -3,196 +3,55 @@
 <head>
   <title>Admission Form</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 90%;
-      max-width: 400px;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    .dob-selects {
-      display: flex;
-      gap: 5px;
-      margin-bottom: 16px;
-    }
-
-    .dob-selects select {
-      flex: 1;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        padding: 20px;
-      }
-
-      h2 {
-        font-size: 20px;
-      }
-    }
+    body { font-family: Arial; padding: 20px; max-width: 500px; margin: auto; }
+    input, select { width: 100%; padding: 10px; margin: 10px 0; }
+    button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Admission Form</h2>
-    <form id="myForm">
-      <label>Full Name:
-        <input type="text" id="fullName" required>
-      </label>
+  <h2>Admission Form</h2>
+  <form id="form">
+    <input type="text" id="fullName" placeholder="Full Name" required>
+    <input type="text" id="state" placeholder="State of Origin" required>
 
-      <label>State of Origin:
-        <input type="text" id="state" required>
-      </label>
+    <div style="display: flex; gap: 5px;">
+      <select id="dobDay" required></select>
+      <select id="dobMonth" required></select>
+      <select id="dobYear" required></select>
+    </div>
 
-      <label>Date of Birth:</label>
-      <div class="dob-selects">
-        <select id="dobDay" required></select>
-        <select id="dobMonth" required></select>
-        <select id="dobYear" required></select>
-      </div>
-
-      <label>JAMB Score:
-        <input type="number" id="jambScore" required>
-      </label>
-
-      <label>Course Applied:
-        <input type="text" id="course" required>
-      </label>
-
-      <label>Year Applied:
-        <input type="number" id="year" required>
-      </label>
-
-      <label>Disability (if any):
-        <input type="text" id="disability">
-      </label>
-
-      <button type="submit">Download PDF</button>
-    </form>
-  </div>
+    <input type="number" id="jamb" placeholder="JAMB Score" required>
+    <input type="text" id="course" placeholder="Course Applied" required>
+    <input type="number" id="year" placeholder="Year Applied" required>
+    <input type="text" id="disability" placeholder="Disability (if any)">
+    <button type="submit">Next</button>
+  </form>
 
   <script>
-    // Populate Day
-    const daySelect = document.getElementById("dobDay");
-    for (let i = 1; i <= 31; i++) {
-      daySelect.innerHTML += `<option value="${i}">${i}</option>`;
-    }
+    // Populate date dropdowns
+    const day = document.getElementById("dobDay");
+    for (let i = 1; i <= 31; i++) day.innerHTML += `<option>${i}</option>`;
+    const month = document.getElementById("dobMonth");
+    ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+      .forEach(m => month.innerHTML += `<option>${m}</option>`);
+    const year = document.getElementById("dobYear");
+    for (let y = new Date().getFullYear(); y >= 1950; y--) 
+      year.innerHTML += `<option>${y}</option>`;
 
-    // Populate Month
-    const monthSelect = document.getElementById("dobMonth");
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    months.forEach((m) => {
-      monthSelect.innerHTML += `<option value="${m}">${m}</option>`;
-    });
-
-    // Populate Year
-    const yearSelect = document.getElementById("dobYear");
-    for (let y = new Date().getFullYear(); y >= 1950; y--) {
-      yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
-    }
-
-    // Get DOB as string
-    function getDOB() {
-      const day = document.getElementById("dobDay").value;
-      const month = document.getElementById("dobMonth").value;
-      const year = document.getElementById("dobYear").value;
-      return `${day} ${month} ${year}`;
-    }
-
-    // PDF generation with confirmation
-    document.getElementById("myForm").addEventListener("submit", function(e) {
+    // Redirect to confirm.html with query params
+    document.getElementById("form").addEventListener("submit", e => {
       e.preventDefault();
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-
-      const fullName = document.getElementById("fullName").value;
-      const state = document.getElementById("state").value;
-      const dob = getDOB();
-      const jamb = document.getElementById("jambScore").value;
-      const course = document.getElementById("course").value;
-      const year = document.getElementById("year").value;
-      const disability = document.getElementById("disability").value || "None";
-
-      const confirmMsg = `
-Please confirm your details:
-
-Full Name: ${fullName}
-State of Origin: ${state}
-Date of Birth: ${dob}
-JAMB Score: ${jamb}
-Course Applied: ${course}
-Year Applied: ${year}
-Disability: ${disability}
-
-Are all these details correct?`;
-
-      if (confirm(confirmMsg)) {
-        let y = 10;
-        doc.text(`Full Name: ${fullName}`, 10, y); y += 10;
-        doc.text(`State of Origin: ${state}`, 10, y); y += 10;
-        doc.text(`Date of Birth: ${dob}`, 10, y); y += 10;
-        doc.text(`JAMB Score: ${jamb}`, 10, y); y += 10;
-        doc.text(`Course Applied: ${course}`, 10, y); y += 10;
-        doc.text(`Year Applied: ${year}`, 10, y); y += 10;
-        doc.text(`Disability: ${disability}`, 10, y);
-
-        doc.save("Admission_Form.pdf");
-      } else {
-        alert("Please review and correct the form.");
-      }
+      const params = new URLSearchParams({
+        fullName: document.getElementById("fullName").value,
+        state: document.getElementById("state").value,
+        dob: `${day.value} ${month.value} ${year.value}`,
+        jamb: document.getElementById("jamb").value,
+        course: document.getElementById("course").value,
+        year: document.getElementById("year").value,
+        disability: document.getElementById("disability").value || "None"
+      });
+      window.location.href = "confirm.html?" + params.toString();
     });
   </script>
 </body>
