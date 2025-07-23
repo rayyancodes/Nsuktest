@@ -2,15 +2,22 @@
 <html>
 <head>
   <title>Admission Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: Arial, sans-serif;
       background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
     }
 
     .container {
@@ -18,7 +25,7 @@
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 100%;
+      width: 90%;
       max-width: 400px;
     }
 
@@ -29,31 +36,41 @@
 
     label {
       display: block;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     input {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       margin-top: 4px;
-      margin-bottom: 16px;
       border: 1px solid #ccc;
       border-radius: 5px;
     }
 
     button {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       background-color: #007bff;
       color: white;
       border: none;
       border-radius: 5px;
       font-size: 16px;
+      margin-top: 10px;
       cursor: pointer;
     }
 
     button:hover {
       background-color: #0056b3;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
     }
   </style>
 </head>
