@@ -128,12 +128,25 @@
       yearSelect.add(option);
     }
 
-    // Handle form submission (replace with your logic)
-    document.getElementById("form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      // Example redirect to confirmation page
-      window.location.href = "confirm.html";
-    });
+// Handle form submission and save to localStorage
+document.getElementById("form").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const data = {
+    fullName: document.getElementById("fullName").value,
+    state: document.getElementById("state").value,
+    dob: `${document.getElementById("dobDay").value}-${document.getElementById("dobMonth").value}-${document.getElementById("dobYear").value}`,
+    jamb: document.getElementById("jamb").value,
+    course: document.getElementById("course").value,
+    year: document.getElementById("year").value,
+    disability: document.getElementById("disability").value
+  };
+
+  localStorage.setItem("formData", JSON.stringify(data));
+
+  // Redirect to confirm page
+  window.location.href = "confirm.html";
+});
   </script>
 </body>
 </html>
