@@ -1,124 +1,138 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admission Form</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-  * {
-    box-sizing: border-box;
-  }
+    * {
+      box-sizing: border-box;
+    }
 
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
-  }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+    }
 
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-  .form-wrapper {
-    background-color: #fff;
-    padding: 30px 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
-  }
+    .form-wrapper {
+      background-color: #fff;
+      padding: 30px 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 500px;
+    }
 
-  h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-  }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-  form {
-    text-align: left;
-  }
+    .form-title {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
 
-  input, select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
 
-  .dob-row {
-    display: flex;
-    gap: 5px;
-  }
+    .dob-row {
+      display: flex;
+      gap: 5px;
+    }
 
-  .dob-row select {
-    flex: 1;
-  }
+    .dob-row select {
+      flex: 1;
+    }
 
-  button {
-    width: 100%;
-    padding: 12px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
+    button {
+      padding: 12px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-  button:hover {
-    background-color: #0056b3;
-  }
-</style>
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-  <h2>Admission Form</h2>
-  <form id="form">
-    <input type="text" id="fullName" placeholder="Full Name" required>
-    <input type="text" id="state" placeholder="State of Origin" required>
+  <div class="form-wrapper">
+    <form id="form">
+      <h2 class="form-title">Admission Form</h2>
 
-    <div style="display: flex; gap: 5px;">
-      <select id="dobDay" required></select>
-      <select id="dobMonth" required></select>
-      <select id="dobYear" required></select>
-    </div>
+      <input type="text" id="fullName" placeholder="Full Name" required>
+      <input type="text" id="state" placeholder="State of Origin" required>
 
-    <input type="number" id="jamb" placeholder="JAMB Score" required>
-    <input type="text" id="course" placeholder="Course Applied" required>
-    <input type="number" id="year" placeholder="Year Applied" required>
-    <input type="text" id="disability" placeholder="Disability (if any)">
-    <button type="submit">Next</button>
-  </form>
+      <div class="dob-row">
+        <select id="dobDay" required></select>
+        <select id="dobMonth" required></select>
+        <select id="dobYear" required></select>
+      </div>
+
+      <input type="number" id="jamb" placeholder="JAMB Score" required>
+      <input type="text" id="course" placeholder="Course Applied" required>
+      <input type="number" id="year" placeholder="Year Applied" required>
+      <input type="text" id="disability" placeholder="Disability (if any)">
+      <button type="submit">Next</button>
+    </form>
+  </div>
 
   <script>
-    // Populate date dropdowns
-    const day = document.getElementById("dobDay");
-    for (let i = 1; i <= 31; i++) day.innerHTML += `<option>${i}</option>`;
-    const month = document.getElementById("dobMonth");
-    ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
-      .forEach(m => month.innerHTML += `<option>${m}</option>`);
-    const year = document.getElementById("dobYear");
-    for (let y = new Date().getFullYear(); y >= 1950; y--) 
-      year.innerHTML += `<option>${y}</option>`;
+    // Populate Day dropdown
+    const daySelect = document.getElementById("dobDay");
+    for (let d = 1; d <= 31; d++) {
+      const option = document.createElement("option");
+      option.value = option.text = d;
+      daySelect.add(option);
+    }
 
-    // Redirect to confirm.html with query params
-    document.getElementById("form").addEventListener("submit", e => {
+    // Populate Month dropdown
+    const monthSelect = document.getElementById("dobMonth");
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    months.forEach((m, i) => {
+      const option = document.createElement("option");
+      option.value = i + 1;
+      option.text = m;
+      monthSelect.add(option);
+    });
+
+    // Populate Year dropdown
+    const yearSelect = document.getElementById("dobYear");
+    const currentYear = new Date().getFullYear();
+    for (let y = currentYear; y >= 1950; y--) {
+      const option = document.createElement("option");
+      option.value = option.text = y;
+      yearSelect.add(option);
+    }
+
+    // Handle form submission (replace with your logic)
+    document.getElementById("form").addEventListener("submit", function(e) {
       e.preventDefault();
-      const params = new URLSearchParams({
-        fullName: document.getElementById("fullName").value,
-        state: document.getElementById("state").value,
-        dob: `${day.value} ${month.value} ${year.value}`,
-        jamb: document.getElementById("jamb").value,
-        course: document.getElementById("course").value,
-        year: document.getElementById("year").value,
-        disability: document.getElementById("disability").value || "None"
-      });
-      window.location.href = "confirm.html?" + params.toString();
+      // Example redirect to confirmation page
+      window.location.href = "confirm.html";
     });
   </script>
 </body>
