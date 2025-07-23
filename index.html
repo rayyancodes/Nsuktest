@@ -8,37 +8,55 @@
     box-sizing: border-box;
   }
 
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
+  html, body {
     margin: 0;
     padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+  }
+
+  body {
     display: flex;
-    min-height: 100vh;
     justify-content: center;
     align-items: center;
   }
 
-  .form-container {
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
+  .form-wrapper {
+    background-color: #fff;
+    padding: 30px 20px;
+    border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     width: 90%;
     max-width: 500px;
+    text-align: center;
   }
 
   h2 {
-    text-align: center;
     margin-bottom: 20px;
+    font-size: 24px;
+  }
+
+  form {
+    text-align: left;
   }
 
   input, select {
     width: 100%;
     padding: 10px;
-    margin: 10px 0;
+    margin-top: 10px;
+    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 6px;
+  }
+
+  .dob-row {
+    display: flex;
+    gap: 5px;
+  }
+
+  .dob-row select {
+    flex: 1;
   }
 
   button {
@@ -50,19 +68,11 @@
     border-radius: 6px;
     font-size: 16px;
     cursor: pointer;
+    margin-top: 10px;
   }
 
   button:hover {
     background-color: #0056b3;
-  }
-
-  .dob-row {
-    display: flex;
-    gap: 5px;
-  }
-
-  .dob-row select {
-    flex: 1;
   }
 </style>
 </head>
