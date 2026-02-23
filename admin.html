@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NSUK Confessions — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c28;
+    --border: rgba(255,255,255,0.07);
+    --accent1: #c084fc;
+    --accent2: #f472b6;
+    --red: #f87171;
+    --green: #4ade80;
+    --text: #f1f0f5;
+    --muted: #8b8a9e;
+    --grad: linear-gradient(135deg, #c084fc, #f472b6);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; }
+
+  body::before {
+    content:''; position:fixed; top:-200px; left:50%;
+    transform:translateX(-50%); width:700px; height:700px;
+    background:radial-gradient(circle, rgba(192,132,252,0.1) 0%, transparent 70%);
+    pointer-events:none; z-index:0;
+  }
+
+  /* LOGIN */
+  #loginPage {
+    position:fixed; inset:0; z-index:999;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--bg); padding:24px;
+  }
+  .login-box {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:24px; padding:40px 32px; width:100%; max-width:400px;
+    text-align:center;
+  }
+  .login-logo {
+    font-family:'Syne',sans-serif; font-weight:800; font-size:1.3rem;
+    background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    margin-bottom:8px;
+  }
+  .login-sub { color:var(--muted); font-size:0.85rem; margin-bottom:32px; }
+  .login-box input {
+    width:100%; background:var(--surface2); border:1px solid var(--border);
+    border-radius:12px; color:var(--text); font-family:'DM Sans',sans-serif;
+    font-size:0.95rem; padding:13px 16px; outline:none;
+    transition:border-color .2s; margin-bottom:12px; display:block;
+  }
+  .login-box input:focus { border-color:var(--accent1); }
+  .login-box input::placeholder { color:var(--muted); }
+  .login-btn {
+    width:100%; background:var(--grad); border:none; color:#fff;
+    font-family:'DM Sans',sans-serif; font-weight:600; font-size:1rem;
+    padding:13px; border-radius:12px; cursor:pointer;
+    transition:opacity .2s; margin-top:4px;
+  }
+  .login-btn:hover { opacity:.85; }
+  .login-btn:disabled { opacity:.5; cursor:not-allowed; }
+  .login-error { color:var(--red); font-size:0.85rem; margin-top:12px; display:none; }
+
+  /* ADMIN LAYOUT */
+  #adminPage { display:none; min-height:100vh; }
+
+  /* TOP NAV */
+  .admin-nav {
+    position:sticky; top:0; z-index:100;
+    padding:14px 24px;
+    background:rgba(10,10,15,0.9); backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .admin-logo { font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .admin-logo span { -webkit-text-fill-color:var(--muted); background:none; font-weight:400; font-size:.85rem; }
+  .logout-btn {
+    background:rgba(248,113,113,0.15); border:1px solid rgba(248,113,113,0.25);
+    color:var(--red); font-family:'DM Sans',sans-serif; font-size:0.82rem;
+    font-weight:600; padding:7px 16px; border-radius:50px; cursor:pointer;
+    transition:background .2s;
+  }
+  .logout-btn:hover { background:rgba(248,113,113,0.25); }
+
+  /* STATS */
+  .stats-row {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+    padding:24px; max-width:900px; margin:0 auto; position:relative; z-index:1;
+  }
+  .stat-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:16px; padding:20px; text-align:center;
+  }
+  .stat-num { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .stat-label { color:var(--muted); font-size:0.78rem; margin-top:4px; }
+
+  /* TABS */
+  .tabs {
+    display:flex; gap:8px; padding:0 24px 20px;
+    max-width:900px; margin:0 auto; position:relative; z-index:1;
+  }
+  .tab {
+    background:var(--surface); border:1px solid var(--border);
+    color:var(--muted); font-family:'DM Sans',sans-serif; font-size:0.85rem;
+    font-weight:500; padding:8px 20px; border-radius:50px; cursor:pointer;
+    transition:all .2s;
+  }
+  .tab.active { background:var(--grad); border-color:transparent; color:#fff; }
+
+  /* CONTENT */
+  .admin-content { max-width:900px; margin:0 auto; padding:0 24px 80px; position:relative; z-index:1; }
+
+  /* SEARCH */
+  .search-bar {
+    width:100%; background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; color:var(--text); font-family:'DM Sans',sans-serif;
+    font-size:0.9rem; padding:12px 16px; outline:none; transition:border-color .2s;
+    margin-bottom:20px; display:block;
+  }
+  .search-bar:focus { border-color:var(--accent1); }
+  .search-bar::placeholder { color:var(--muted); }
+
+  /* CONFESSION ROW */
+  .admin-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:16px; padding:18px; margin-bottom:12px;
+    animation:fadeUp .3s ease both;
+  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .admin-card-header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:10px; }
+  .admin-card-meta { font-size:0.78rem; color:var(--muted); margin-bottom:6px; }
+  .admin-card-text { font-size:0.92rem; line-height:1.6; color:var(--text); }
+  .admin-card-footer { display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap; }
+
+  .btn-danger {
+    background:rgba(248,113,113,0.12); border:1px solid rgba(248,113,113,0.25);
+    color:var(--red); font-family:'DM Sans',sans-serif; font-size:0.78rem;
+    font-weight:600; padding:6px 14px; border-radius:50px; cursor:pointer;
+    transition:background .2s; white-space:nowrap;
+  }
+  .btn-danger:hover { background:rgba(248,113,113,0.22); }
+
+  .btn-block {
+    background:rgba(251,191,36,0.12); border:1px solid rgba(251,191,36,0.25);
+    color:#fbbf24; font-family:'DM Sans',sans-serif; font-size:0.78rem;
+    font-weight:600; padding:6px 14px; border-radius:50px; cursor:pointer;
+    transition:background .2s; white-space:nowrap;
+  }
+  .btn-block:hover { background:rgba(251,191,36,0.22); }
+
+  .btn-unblock {
+    background:rgba(74,222,128,0.12); border:1px solid rgba(74,222,128,0.25);
+    color:var(--green); font-family:'DM Sans',sans-serif; font-size:0.78rem;
+    font-weight:600; padding:6px 14px; border-radius:50px; cursor:pointer;
+    transition:background .2s; white-space:nowrap;
+  }
+  .btn-unblock:hover { background:rgba(74,222,128,0.22); }
+
+  .expand-btn {
+    background:var(--surface2); border:1px solid var(--border);
+    color:var(--muted); font-family:'DM Sans',sans-serif; font-size:0.78rem;
+    padding:6px 14px; border-radius:50px; cursor:pointer; transition:color .2s;
+  }
+  .expand-btn:hover { color:var(--text); }
+
+  .meta-pill {
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:50px; font-size:0.72rem; color:var(--muted);
+    padding:3px 10px; display:inline-flex; align-items:center; gap:4px;
+  }
+
+  /* COMMENTS SECTION inside card */
+  .comments-list { margin-top:14px; padding-top:14px; border-top:1px solid var(--border); display:none; }
+  .comments-list.open { display:block; }
+  .comment-row {
+    background:var(--surface2); border-radius:10px; padding:10px 12px;
+    margin-bottom:8px; display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+  }
+  .comment-row-text { font-size:0.85rem; line-height:1.5; flex:1; }
+  .comment-row-meta { font-size:0.72rem; color:var(--muted); margin-bottom:3px; }
+
+  /* BLOCKED IPs */
+  .blocked-card {
+    background:var(--surface); border:1px solid rgba(248,113,113,0.2);
+    border-radius:14px; padding:16px 18px; margin-bottom:10px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .blocked-ip { font-size:0.9rem; font-family:monospace; color:var(--red); }
+  .blocked-meta { font-size:0.75rem; color:var(--muted); margin-top:2px; }
+
+  /* LOADING / EMPTY */
+  .loading { text-align:center; padding:50px 20px; color:var(--muted); }
+  .spinner { width:32px; height:32px; border-radius:50%; border:3px solid var(--surface2); border-top-color:var(--accent1); animation:spin .7s linear infinite; margin:0 auto 14px; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .empty { text-align:center; padding:50px 20px; color:var(--muted); font-size:0.9rem; }
+
+  /* TOAST */
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--surface2); border:1px solid rgba(192,132,252,0.3); color:var(--text); font-size:.85rem; padding:11px 22px; border-radius:50px; z-index:9999; transition:transform .3s ease; white-space:nowrap; }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+
+  /* CONFIRM MODAL */
+  .confirm-backdrop { display:none; position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:20px; }
+  .confirm-backdrop.open { display:flex; }
+  .confirm-box { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:28px; max-width:360px; width:100%; text-align:center; animation:modalIn .2s ease; }
+  @keyframes modalIn { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
+  .confirm-box h3 { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; margin-bottom:10px; }
+  .confirm-box p { color:var(--muted); font-size:0.88rem; line-height:1.6; margin-bottom:24px; }
+  .confirm-btns { display:flex; gap:10px; }
+  .confirm-btns button { flex:1; padding:11px; border-radius:12px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:0.9rem; cursor:pointer; border:none; transition:opacity .2s; }
+  .confirm-cancel { background:var(--surface2); color:var(--muted); }
+  .confirm-ok { background:linear-gradient(135deg,#f87171,#f472b6); color:#fff; }
+  .confirm-cancel:hover, .confirm-ok:hover { opacity:.85; }
+
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--surface2); border-radius:4px; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage">
+  <div class="login-box">
+    <div class="login-logo">NSUK Confessions</div>
+    <div class="login-sub">Admin Panel — Authorized Access Only 🔐</div>
+    <input type="email" id="loginEmail" placeholder="Admin Email" autocomplete="email">
+    <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Login</button>
+    <div class="login-error" id="loginError">Invalid credentials. Try again.</div>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div id="adminPage">
+  <nav class="admin-nav">
+    <div>
+      <div class="admin-logo">NSUK Confessions <span>· Admin</span></div>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">Logout</button>
+  </nav>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="statTotal">—</div>
+      <div class="stat-label">Total Confessions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statComments">—</div>
+      <div class="stat-label">Total Comments</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statBlocked">—</div>
+      <div class="stat-label">Blocked IPs</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('confessions',this)">📝 Confessions</button>
+    <button class="tab" onclick="switchTab('blocked',this)">🚫 Blocked IPs</button>
+  </div>
+
+  <!-- Content -->
+  <div class="admin-content">
+    <!-- Confessions Tab -->
+    <div id="tabConfessions">
+      <input class="search-bar" id="searchBar" placeholder="🔍 Search confessions..." oninput="filterConfessions()">
+      <div id="confessionsList"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+    </div>
+
+    <!-- Blocked IPs Tab -->
+    <div id="tabBlocked" style="display:none;">
+      <div id="blockedList"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="confirm-backdrop" id="confirmBackdrop">
+  <div class="confirm-box">
+    <h3 id="confirmTitle">Are you sure?</h3>
+    <p id="confirmMsg">This action cannot be undone.</p>
+    <div class="confirm-btns">
+      <button class="confirm-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="confirm-ok" id="confirmOkBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  import {
+    getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+  import {
+    getFirestore, collection, getDocs, doc, deleteDoc,
+    onSnapshot, orderBy, query, setDoc, getDoc, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+  const app = initializeApp({
+    apiKey: "AIzaSyBoY8QFMH_-N6kPbvnxumcj3Aw2HJcaqm4",
+    authDomain: "nsuk-confession.firebaseapp.com",
+    projectId: "nsuk-confession",
+    storageBucket: "nsuk-confession.firebasestorage.app",
+    messagingSenderId: "824345455790",
+    appId: "1:824345455790:web:40f6c244b2b85b9ea7513f"
+  });
+
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let allConfessions = [];
+  let confirmCallback = null;
+
+  // ---- AUTH ----
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('adminPage').style.display = 'block';
+      loadData();
+    } else {
+      document.getElementById('loginPage').style.display = 'flex';
+      document.getElementById('adminPage').style.display = 'none';
+    }
+  });
+
+  window.doLogin = async () => {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    const btn = document.getElementById('loginBtn');
+    const err = document.getElementById('loginError');
+    err.style.display = 'none';
+    btn.disabled = true; btn.textContent = 'Logging in...';
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch(e) {
+      err.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Login';
+    }
+  };
+
+  window.doLogout = async () => {
+    await signOut(auth);
+  };
+
+  // ---- LOAD DATA ----
+  async function loadData() {
+    // Live confessions
+    onSnapshot(query(collection(db,'confessions'), orderBy('createdAt','desc')), async snap => {
+      allConfessions = snap.docs;
+      document.getElementById('statTotal').textContent = snap.docs.length;
+      renderConfessions(snap.docs);
+      // Count comments
+      let total = 0;
+      for (const d of snap.docs) {
+        const cSnap = await getDocs(collection(db,'confessions',d.id,'comments'));
+        total += cSnap.size;
+      }
+      document.getElementById('statComments').textContent = total;
+    });
+
+    // Blocked IPs
+    onSnapshot(collection(db,'blockedIPs'), snap => {
+      document.getElementById('statBlocked').textContent = snap.docs.length;
+      renderBlocked(snap.docs);
+    });
+  }
+
+  // ---- CONFESSIONS ----
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function timeAgo(ts) {
+    if (!ts) return 'just now';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    const s = Math.floor((Date.now()-d)/1000);
+    if (s < 60) return 'just now';
+    if (s < 3600) return Math.floor(s/60)+'m ago';
+    if (s < 86400) return Math.floor(s/3600)+'h ago';
+    return d.toLocaleDateString();
+  }
+
+  function renderConfessions(docs) {
+    const el = document.getElementById('confessionsList');
+    if (!docs.length) { el.innerHTML = '<div class="empty">No confessions yet.</div>'; return; }
+    el.innerHTML = docs.map((d,i) => {
+      const data = d.data();
+      return `<div class="admin-card" style="animation-delay:${i*.04}s" id="card-${d.id}">
+        <div class="admin-card-header">
+          <div>
+            <div class="admin-card-meta">
+              📅 ${timeAgo(data.createdAt)} &nbsp;·&nbsp;
+              <span class="meta-pill">❤️ ${data.likes||0}</span>
+              <span class="meta-pill">💬 ${data.commentCount||0}</span>
+              ${data.ip ? `<span class="meta-pill">🌐 ${esc(data.ip)}</span>` : ''}
+            </div>
+            <div class="admin-card-text">${esc(data.text)}</div>
+          </div>
+        </div>
+        <div class="admin-card-footer">
+          <button class="btn-danger" onclick="confirmDelete('confession','${d.id}')">🗑️ Delete</button>
+          ${data.ip ? `<button class="btn-block" onclick="blockIP('${esc(data.ip)}')">🚫 Block IP</button>` : ''}
+          <button class="expand-btn" onclick="toggleComments('${d.id}',this)">💬 View Comments</button>
+        </div>
+        <div class="comments-list" id="comments-${d.id}">
+          <div class="loading"><div class="spinner"></div></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  window.filterConfessions = () => {
+    const q = document.getElementById('searchBar').value.toLowerCase();
+    const filtered = allConfessions.filter(d => d.data().text.toLowerCase().includes(q));
+    renderConfessions(filtered);
+  };
+
+  window.toggleComments = async (id, btn) => {
+    const el = document.getElementById('comments-'+id);
+    if (el.classList.contains('open')) {
+      el.classList.remove('open');
+      btn.textContent = '💬 View Comments';
+      return;
+    }
+    el.classList.add('open');
+    btn.textContent = '🔼 Hide Comments';
+    el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+    const snap = await getDocs(collection(db,'confessions',id,'comments'));
+    if (!snap.docs.length) { el.innerHTML = '<div style="color:var(--muted);font-size:.85rem;padding:8px 0">No comments yet.</div>'; return; }
+    el.innerHTML = snap.docs.map(d => {
+      const data = d.data();
+      return `<div class="comment-row">
+        <div style="flex:1">
+          <div class="comment-row-meta">Anonymous · ${timeAgo(data.createdAt)}</div>
+          <div class="comment-row-text">${esc(data.text)}</div>
+        </div>
+        <button class="btn-danger" style="flex-shrink:0" onclick="confirmDelete('comment','${id}','${d.id}')">🗑️</button>
+      </div>`;
+    }).join('');
+  };
+
+  // ---- DELETE ----
+  window.confirmDelete = (type, id, commentId) => {
+    document.getElementById('confirmTitle').textContent = type === 'confession' ? 'Delete Confession?' : 'Delete Comment?';
+    document.getElementById('confirmMsg').textContent = type === 'confession'
+      ? 'This will permanently delete the confession and all its comments.'
+      : 'This will permanently delete this comment.';
+    document.getElementById('confirmOkBtn').textContent = 'Delete';
+    document.getElementById('confirmBackdrop').classList.add('open');
+    confirmCallback = async () => {
+      try {
+        if (type === 'confession') {
+          // Delete all comments first
+          const cSnap = await getDocs(collection(db,'confessions',id,'comments'));
+          for (const c of cSnap.docs) await deleteDoc(doc(db,'confessions',id,'comments',c.id));
+          await deleteDoc(doc(db,'confessions',id));
+          showToast('Confession deleted ✅');
+        } else {
+          await deleteDoc(doc(db,'confessions',id,'comments',commentId));
+          // Refresh comments
+          const btn = document.querySelector(`#card-${id} .expand-btn`);
+          if (btn) toggleComments(id, btn);
+          showToast('Comment deleted ✅');
+        }
+      } catch(e) { showToast('Error deleting. Try again.'); }
+    };
+  };
+
+  window.closeConfirm = () => {
+    document.getElementById('confirmBackdrop').classList.remove('open');
+    confirmCallback = null;
+  };
+
+  document.getElementById('confirmOkBtn').onclick = async () => {
+    if (confirmCallback) { await confirmCallback(); closeConfirm(); }
+  };
+
+  // ---- BLOCKED IPs ----
+  window.blockIP = (ip) => {
+    document.getElementById('confirmTitle').textContent = 'Block this IP?';
+    document.getElementById('confirmMsg').textContent = `IP: ${ip}\n\nThis user won't be able to submit confessions.`;
+    document.getElementById('confirmOkBtn').textContent = 'Block';
+    document.getElementById('confirmBackdrop').classList.add('open');
+    confirmCallback = async () => {
+      try {
+        await setDoc(doc(db,'blockedIPs',ip.replace(/\./g,'_')), { ip, blockedAt: serverTimestamp() });
+        showToast('IP blocked 🚫');
+      } catch(e) { showToast('Error blocking IP.'); }
+    };
+  };
+
+  window.unblockIP = (docId) => {
+    document.getElementById('confirmTitle').textContent = 'Unblock this IP?';
+    document.getElementById('confirmMsg').textContent = 'This user will be able to submit confessions again.';
+    document.getElementById('confirmOkBtn').textContent = 'Unblock';
+    document.getElementById('confirmBackdrop').classList.add('open');
+    confirmCallback = async () => {
+      try {
+        await deleteDoc(doc(db,'blockedIPs',docId));
+        showToast('IP unblocked ✅');
+      } catch(e) { showToast('Error unblocking IP.'); }
+    };
+  };
+
+  function renderBlocked(docs) {
+    const el = document.getElementById('blockedList');
+    if (!docs.length) { el.innerHTML = '<div class="empty">No blocked IPs. 🎉</div>'; return; }
+    el.innerHTML = docs.map(d => {
+      const data = d.data();
+      return `<div class="blocked-card">
+        <div>
+          <div class="blocked-ip">🌐 ${esc(data.ip)}</div>
+          <div class="blocked-meta">Blocked ${timeAgo(data.blockedAt)}</div>
+        </div>
+        <button class="btn-unblock" onclick="unblockIP('${d.id}')">✅ Unblock</button>
+      </div>`;
+    }).join('');
+  }
+
+  // ---- TABS ----
+  window.switchTab = (tab, btn) => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tabConfessions').style.display = tab === 'confessions' ? 'block' : 'none';
+    document.getElementById('tabBlocked').style.display = tab === 'blocked' ? 'block' : 'none';
+  };
+
+  // ---- TOAST ----
+  window.showToast = (msg) => {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  };
+</script>
+</body>
+</html>
