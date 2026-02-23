@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NSUK Confessions & Anonymous</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c28;
+    --border: rgba(255,255,255,0.07);
+    --accent1: #c084fc;
+    --accent2: #f472b6;
+    --text: #f1f0f5;
+    --muted: #8b8a9e;
+    --grad: linear-gradient(135deg, #c084fc, #f472b6);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content:'';
+    position:fixed; top:-200px; left:50%;
+    transform:translateX(-50%);
+    width:700px; height:700px;
+    background:radial-gradient(circle, rgba(192,132,252,0.12) 0%, transparent 70%);
+    pointer-events:none; z-index:0;
+  }
+  nav {
+    position:sticky; top:0; z-index:100;
+    padding:16px 24px;
+    background:rgba(10,10,15,0.88);
+    backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo {
+    font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem;
+    background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    letter-spacing:-0.02em;
+  }
+  .logo span { -webkit-text-fill-color:var(--muted); background:none; font-weight:400; }
+  .nav-btn {
+    background:var(--grad); border:none; color:#fff;
+    font-family:'DM Sans',sans-serif; font-weight:600; font-size:0.85rem;
+    padding:8px 18px; border-radius:50px; cursor:pointer;
+    transition:opacity .2s,transform .2s;
+  }
+  .nav-btn:hover { opacity:.85; transform:scale(1.03); }
+  .hero {
+    position:relative; z-index:1;
+    text-align:center; padding:56px 24px 36px;
+  }
+  .hero h1 {
+    font-family:'Syne',sans-serif;
+    font-size:clamp(2rem,6vw,3.2rem);
+    font-weight:800; line-height:1.1; letter-spacing:-0.03em; margin-bottom:12px;
+  }
+  .hero h1 .grad { background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero p { color:var(--muted); font-size:1rem; max-width:400px; margin:0 auto 28px; line-height:1.6; }
+  .submit-wrap { position:relative; z-index:1; max-width:560px; margin:0 auto 52px; padding:0 24px; }
+  .submit-card { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:24px; }
+  .submit-card textarea {
+    width:100%; background:var(--surface2); border:1px solid var(--border);
+    border-radius:12px; color:var(--text); font-family:'DM Sans',sans-serif;
+    font-size:0.95rem; padding:14px 16px; resize:none; height:110px;
+    outline:none; transition:border-color .2s; line-height:1.5;
+  }
+  .submit-card textarea:focus { border-color:var(--accent1); }
+  .submit-card textarea::placeholder { color:var(--muted); }
+  .submit-row { display:flex; align-items:center; justify-content:space-between; margin-top:12px; gap:12px; }
+  .anon-tag { display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--muted); }
+  .anon-dot { width:8px; height:8px; border-radius:50%; background:#4ade80; box-shadow:0 0 8px #4ade80; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .submit-btn {
+    background:var(--grad); border:none; color:#fff;
+    font-family:'DM Sans',sans-serif; font-weight:600; font-size:0.9rem;
+    padding:10px 24px; border-radius:50px; cursor:pointer;
+    transition:opacity .2s,transform .2s; white-space:nowrap;
+  }
+  .submit-btn:hover { opacity:.85; transform:scale(1.03); }
+  .submit-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+  .feed-section { position:relative; z-index:1; max-width:640px; margin:0 auto; padding:0 24px 80px; }
+  .feed-header { display:flex; align-items:center; gap:10px; margin-bottom:24px; }
+  .feed-header h2 { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; }
+  .badge {
+    background:rgba(192,132,252,0.15); color:var(--accent1);
+    border:1px solid rgba(192,132,252,0.25); border-radius:50px;
+    font-size:0.75rem; font-weight:600; padding:2px 10px;
+  }
+  .card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:18px; padding:20px; margin-bottom:14px;
+    cursor:pointer; transition:border-color .2s,transform .2s,box-shadow .2s;
+    animation:fadeUp .4s ease both;
+  }
+  .card:hover { border-color:rgba(192,132,252,0.35); transform:translateY(-2px); box-shadow:0 8px 30px rgba(192,132,252,0.1); }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .card-meta { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .avatar { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; flex-shrink:0; }
+  .card-author { font-size:0.82rem; color:var(--muted); }
+  .card-time { font-size:0.75rem; color:var(--muted); opacity:.6; margin-left:auto; }
+  .card-body { font-size:0.95rem; line-height:1.6; color:var(--text); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .card-footer { display:flex; align-items:center; gap:16px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border); }
+  .card-action { display:flex; align-items:center; gap:5px; font-size:0.8rem; color:var(--muted); background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; transition:color .2s; padding:0; }
+  .card-action:hover { color:var(--accent1); }
+  .card-action.liked { color:var(--accent2); }
+  .card-action svg { width:15px; height:15px; }
+  .modal-backdrop { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); padding:20px; align-items:center; justify-content:center; }
+  .modal-backdrop.open { display:flex; }
+  .modal { background:var(--surface); border:1px solid var(--border); border-radius:22px; width:100%; max-width:560px; max-height:85vh; overflow-y:auto; padding:28px; animation:modalIn .25s ease; }
+  @keyframes modalIn { from{opacity:0;transform:scale(.95) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  .modal-close { float:right; background:var(--surface2); border:none; color:var(--muted); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; transition:color .2s; }
+  .modal-close:hover { color:var(--text); }
+  .modal-body-text { font-size:1.05rem; line-height:1.7; color:var(--text); margin:20px 0 24px; }
+  .comments-section h3 { font-family:'Syne',sans-serif; font-weight:700; margin-bottom:16px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; font-size:.75rem; }
+  .comment { background:var(--surface2); border-radius:12px; padding:12px 14px; margin-bottom:10px; font-size:.88rem; line-height:1.5; border:1px solid var(--border); }
+  .comment-meta { font-size:.75rem; color:var(--muted); margin-bottom:4px; }
+  .comment-input-row { display:flex; gap:10px; margin-top:16px; }
+  .comment-input { flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:12px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:.88rem; padding:10px 14px; outline:none; transition:border-color .2s; }
+  .comment-input:focus { border-color:var(--accent1); }
+  .comment-input::placeholder { color:var(--muted); }
+  .comment-send { background:var(--grad); border:none; color:#fff; border-radius:12px; padding:10px 18px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:.85rem; cursor:pointer; transition:opacity .2s; white-space:nowrap; }
+  .comment-send:hover { opacity:.85; }
+  .comment-send:disabled { opacity:.5; cursor:not-allowed; }
+  .loading { text-align:center; padding:60px 20px; color:var(--muted); }
+  .spinner { width:36px; height:36px; border-radius:50%; border:3px solid var(--surface2); border-top-color:var(--accent1); animation:spin .7s linear infinite; margin:0 auto 16px; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .empty { text-align:center; padding:60px 20px; color:var(--muted); }
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--surface2); border:1px solid rgba(192,132,252,0.3); color:var(--text); font-size:.88rem; padding:12px 22px; border-radius:50px; z-index:999; transition:transform .3s ease; white-space:nowrap; }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--surface2); border-radius:4px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">NSUK<span> · </span>Confessions</div>
+  <button class="nav-btn" onclick="document.getElementById('confessInput').focus()">✍️ Confess</button>
+</nav>
+
+<div class="hero">
+  <h1>Say it<br><span class="grad">Anonymously.</span></h1>
+  <p>Send confessions, secrets & hot takes — your identity stays hidden. Always. 🤫</p>
+</div>
+
+<div class="submit-wrap">
+  <div class="submit-card">
+    <textarea id="confessInput" placeholder="Type your confession, secret or hot take... 🤫&#10;No name. No trace. Just vibes."></textarea>
+    <div class="submit-row">
+      <div class="anon-tag"><div class="anon-dot"></div>100% Anonymous</div>
+      <button class="submit-btn" id="submitBtn" onclick="submitConfession()">Send Confession 🔒</button>
+    </div>
+  </div>
+</div>
+
+<div class="feed-section">
+  <div class="feed-header">
+    <h2>Confessions Feed</h2>
+    <span class="badge" id="countBadge">...</span>
+  </div>
+  <div id="feed"><div class="loading"><div class="spinner"></div>Loading confessions...</div></div>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="card-meta" id="modalMeta"></div>
+    <div class="modal-body-text" id="modalText"></div>
+    <div class="comments-section">
+      <h3>Comments</h3>
+      <div id="modalComments"><div class="loading"><div class="spinner"></div></div></div>
+      <div class="comment-input-row">
+        <input class="comment-input" id="commentInput" placeholder="Drop an anonymous comment..." onkeydown="if(event.key==='Enter')addComment()">
+        <button class="comment-send" id="commentBtn" onclick="addComment()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, doc, onSnapshot,
+    orderBy, query, updateDoc, increment, serverTimestamp, getDoc, getDocs
+  } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+  const app = initializeApp({
+    apiKey: "AIzaSyBoY8QFMH_-N6kPbvnxumcj3Aw2HJcaqm4",
+    authDomain: "nsuk-confession.firebaseapp.com",
+    projectId: "nsuk-confession",
+    storageBucket: "nsuk-confession.firebasestorage.app",
+    messagingSenderId: "824345455790",
+    appId: "1:824345455790:web:40f6c244b2b85b9ea7513f"
+  });
+
+  const db = getFirestore(app);
+
+  const AVATARS = [
+    { bg:'linear-gradient(135deg,#c084fc,#f472b6)', label:'😶‍🌫️' },
+    { bg:'linear-gradient(135deg,#818cf8,#c084fc)', label:'🕶️' },
+    { bg:'linear-gradient(135deg,#f472b6,#fb923c)', label:'🫣' },
+    { bg:'linear-gradient(135deg,#34d399,#818cf8)', label:'🤫' },
+    { bg:'linear-gradient(135deg,#fbbf24,#f472b6)', label:'👀' },
+  ];
+
+  let currentId = null;
+  let liked = new Set(JSON.parse(localStorage.getItem('nsuk_liked') || '[]'));
+  let cache = [];
+
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  function timeAgo(ts) {
+    if (!ts) return 'just now';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    const s = Math.floor((Date.now() - d) / 1000);
+    if (s < 60) return 'just now';
+    if (s < 3600) return Math.floor(s/60) + 'm ago';
+    if (s < 86400) return Math.floor(s/3600) + 'h ago';
+    if (s < 604800) return Math.floor(s/86400) + 'd ago';
+    return d.toLocaleDateString();
+  }
+
+  function getAv(id) {
+    let h = 0;
+    for (let c of String(id)) h = (h * 31 + c.charCodeAt(0)) & 0xffffffff;
+    return AVATARS[Math.abs(h) % AVATARS.length];
+  }
+
+  function renderFeed(docs) {
+    cache = docs;
+    document.getElementById('countBadge').textContent = docs.length;
+    const feed = document.getElementById('feed');
+    if (!docs.length) {
+      feed.innerHTML = `<div class="empty"><svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-bottom:16px;opacity:.3"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg><p>No confessions yet. Be the first! 👻</p></div>`;
+      return;
+    }
+    feed.innerHTML = docs.map((d,i) => {
+      const av = getAv(d.id), data = d.data(), isLiked = liked.has(d.id);
+      return `<div class="card" style="animation-delay:${i*.06}s" onclick="openModal('${d.id}')">
+        <div class="card-meta">
+          <div class="avatar" style="background:${av.bg}">${av.label}</div>
+          <span class="card-author">Anonymous</span>
+          <span class="card-time">${timeAgo(data.createdAt)}</span>
+        </div>
+        <div class="card-body">${esc(data.text)}</div>
+        <div class="card-footer">
+          <button class="card-action ${isLiked?'liked':''}" onclick="event.stopPropagation();toggleLike('${d.id}',this)">
+            <svg viewBox="0 0 24 24" fill="${isLiked?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            <span id="likes-${d.id}">${data.likes||0}</span>
+          </button>
+          <button class="card-action" onclick="event.stopPropagation();openModal('${d.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            <span>${data.commentCount||0}</span> comment${(data.commentCount||0)!==1?'s':''}
+          </button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Live feed
+  onSnapshot(query(collection(db,'confessions'), orderBy('createdAt','desc')), snap => renderFeed(snap.docs));
+
+  window.submitConfession = async () => {
+    const ta = document.getElementById('confessInput');
+    const btn = document.getElementById('submitBtn');
+    const text = ta.value.trim();
+    if (!text) { showToast('Write something first! ✍️'); return; }
+    if (text.length < 5) { showToast('Too short! Say more 😏'); return; }
+    btn.disabled = true; btn.textContent = 'Sending...';
+    try {
+      await addDoc(collection(db,'confessions'), { text, createdAt: serverTimestamp(), likes:0, commentCount:0 });
+      ta.value = '';
+      showToast('Confession sent! 🔒');
+      window.scrollTo({ top: document.querySelector('.feed-section').offsetTop - 80, behavior:'smooth' });
+    } catch(e) { showToast('Error. Try again!'); }
+    btn.disabled = false; btn.textContent = 'Send Confession 🔒';
+  };
+
+  window.toggleLike = async (id, btn) => {
+    const ref = doc(db,'confessions',id);
+    const likeEl = document.getElementById('likes-'+id);
+    if (liked.has(id)) {
+      liked.delete(id); btn.classList.remove('liked');
+      btn.querySelector('svg').setAttribute('fill','none');
+      if (likeEl) likeEl.textContent = Math.max(0, parseInt(likeEl.textContent)-1);
+      await updateDoc(ref, { likes: increment(-1) });
+    } else {
+      liked.add(id); btn.classList.add('liked');
+      btn.querySelector('svg').setAttribute('fill','currentColor');
+      if (likeEl) likeEl.textContent = parseInt(likeEl.textContent)+1;
+      await updateDoc(ref, { likes: increment(1) });
+    }
+    localStorage.setItem('nsuk_liked', JSON.stringify([...liked]));
+  };
+
+  window.openModal = async (id) => {
+    currentId = id;
+    const cached = cache.find(d => d.id === id);
+    const data = cached ? cached.data() : (await getDoc(doc(db,'confessions',id))).data();
+    const av = getAv(id);
+    document.getElementById('modalMeta').innerHTML = `
+      <div class="avatar" style="background:${av.bg}">${av.label}</div>
+      <span class="card-author">Anonymous</span>
+      <span class="card-time" style="margin-left:auto">${timeAgo(data.createdAt)}</span>`;
+    document.getElementById('modalText').textContent = data.text;
+    document.getElementById('modalComments').innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+    document.getElementById('modalBackdrop').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    const snap = await getDocs(query(collection(db,'confessions',id,'comments'), orderBy('createdAt','asc')));
+    renderComments(snap.docs);
+  };
+
+  function renderComments(docs) {
+    const el = document.getElementById('modalComments');
+    if (!docs.length) { el.innerHTML = `<p style="color:var(--muted);font-size:.85rem;margin-bottom:12px">No comments yet. Be the first! 👇</p>`; return; }
+    el.innerHTML = docs.map(d => {
+      const data = d.data();
+      return `<div class="comment"><div class="comment-meta">Anonymous · ${timeAgo(data.createdAt)}</div>${esc(data.text)}</div>`;
+    }).join('');
+  }
+
+  window.addComment = async () => {
+    const input = document.getElementById('commentInput');
+    const btn = document.getElementById('commentBtn');
+    const text = input.value.trim();
+    if (!text || !currentId) return;
+    btn.disabled = true;
+    try {
+      await addDoc(collection(db,'confessions',currentId,'comments'), { text, createdAt: serverTimestamp() });
+      await updateDoc(doc(db,'confessions',currentId), { commentCount: increment(1) });
+      input.value = '';
+      const snap = await getDocs(query(collection(db,'confessions',currentId,'comments'), orderBy('createdAt','asc')));
+      renderComments(snap.docs);
+      showToast('Comment added! 💬');
+      document.getElementById('modal').scrollTop = 99999;
+    } catch(e) { showToast('Error. Try again!'); }
+    btn.disabled = false;
+  };
+
+  window.closeModal = (e) => { if (e.target === document.getElementById('modalBackdrop')) closeModalDirect(); };
+  window.closeModalDirect = () => { document.getElementById('modalBackdrop').classList.remove('open'); document.body.style.overflow=''; currentId=null; };
+
+  window.showToast = (msg) => {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  };
+</script>
+</body>
+</html>
