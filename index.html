@@ -2,46 +2,34 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>NSUK Confessions & Anonymous</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0f;
-    --surface: #13131a;
-    --surface2: #1c1c28;
-    --border: rgba(255,255,255,0.07);
-    --accent1: #c084fc;
-    --accent2: #f472b6;
-    --text: #f1f0f5;
-    --muted: #8b8a9e;
+    --bg: #0a0a0f; --surface: #13131a; --surface2: #1c1c28;
+    --border: rgba(255,255,255,0.07); --accent1: #c084fc; --accent2: #f472b6;
+    --text: #f1f0f5; --muted: #8b8a9e;
     --grad: linear-gradient(135deg, #c084fc, #f472b6);
   }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
-  body::before {
-    content:''; position:fixed; top:-200px; left:50%;
-    transform:translateX(-50%); width:700px; height:700px;
-    background:radial-gradient(circle, rgba(192,132,252,0.12) 0%, transparent 70%);
-    pointer-events:none; z-index:0;
-  }
-  nav {
-    position:sticky; top:0; z-index:100; padding:16px 24px;
-    background:rgba(10,10,15,0.88); backdrop-filter:blur(20px);
-    border-bottom:1px solid var(--border);
-    display:flex; align-items:center; justify-content:space-between;
-  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; overflow-x:hidden; user-select:none; -webkit-user-select:none; }
+  body::before { content:''; position:fixed; top:-200px; left:50%; transform:translateX(-50%); width:700px; height:700px; background:radial-gradient(circle,rgba(192,132,252,0.12) 0%,transparent 70%); pointer-events:none; z-index:0; }
+
+  nav { position:sticky; top:0; z-index:100; padding:16px 24px; background:rgba(10,10,15,0.88); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
   .logo { font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.02em; }
   .logo span { -webkit-text-fill-color:var(--muted); background:none; font-weight:400; }
   .nav-btn { background:var(--grad); border:none; color:#fff; font-family:'DM Sans',sans-serif; font-weight:600; font-size:0.85rem; padding:8px 18px; border-radius:50px; cursor:pointer; transition:opacity .2s,transform .2s; }
   .nav-btn:hover { opacity:.85; transform:scale(1.03); }
+
   .hero { position:relative; z-index:1; text-align:center; padding:56px 24px 36px; }
   .hero h1 { font-family:'Syne',sans-serif; font-size:clamp(2rem,6vw,3.2rem); font-weight:800; line-height:1.1; letter-spacing:-0.03em; margin-bottom:12px; }
   .hero h1 .grad { background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
   .hero p { color:var(--muted); font-size:1rem; max-width:400px; margin:0 auto 28px; line-height:1.6; }
+
   .submit-wrap { position:relative; z-index:1; max-width:560px; margin:0 auto 52px; padding:0 24px; }
   .submit-card { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:24px; }
-  .submit-card textarea { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:12px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.95rem; padding:14px 16px; resize:none; height:110px; outline:none; transition:border-color .2s; line-height:1.5; }
+  .submit-card textarea { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:12px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.95rem; padding:14px 16px; resize:none; height:110px; outline:none; transition:border-color .2s; line-height:1.5; user-select:text; -webkit-user-select:text; }
   .submit-card textarea:focus { border-color:var(--accent1); }
   .submit-card textarea::placeholder { color:var(--muted); }
   .submit-row { display:flex; align-items:center; justify-content:space-between; margin-top:12px; gap:12px; }
@@ -51,47 +39,143 @@
   .submit-btn { background:var(--grad); border:none; color:#fff; font-family:'DM Sans',sans-serif; font-weight:600; font-size:0.9rem; padding:10px 24px; border-radius:50px; cursor:pointer; transition:opacity .2s,transform .2s; white-space:nowrap; }
   .submit-btn:hover { opacity:.85; transform:scale(1.03); }
   .submit-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+
   .feed-section { position:relative; z-index:1; max-width:640px; margin:0 auto; padding:0 24px 80px; }
-  .feed-header { display:flex; align-items:center; gap:10px; margin-bottom:24px; }
+  .feed-header { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
   .feed-header h2 { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; }
   .badge { background:rgba(192,132,252,0.15); color:var(--accent1); border:1px solid rgba(192,132,252,0.25); border-radius:50px; font-size:0.75rem; font-weight:600; padding:2px 10px; }
-  .card { background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:20px; margin-bottom:14px; cursor:pointer; transition:border-color .2s,transform .2s,box-shadow .2s; animation:fadeUp .4s ease both; }
-  .card:hover { border-color:rgba(192,132,252,0.35); transform:translateY(-2px); box-shadow:0 8px 30px rgba(192,132,252,0.1); }
+
+  /* FEED TABS */
+  .feed-tabs { display:flex; gap:8px; margin-bottom:20px; }
+  .feed-tab { flex:1; text-align:center; background:var(--surface); border:1px solid var(--border); color:var(--muted); font-family:'DM Sans',sans-serif; font-size:0.85rem; font-weight:500; padding:9px 12px; border-radius:50px; cursor:pointer; transition:all .2s; }
+  .feed-tab.active { background:var(--grad); border-color:transparent; color:#fff; }
+
+  /* SORT ROW — only shows on Latest tab */
+  .sort-row { display:flex; align-items:center; gap:8px; margin-bottom:16px; }
+  .sort-label { font-size:0.78rem; color:var(--muted); }
+  .sort-btn { background:var(--surface2); border:1px solid var(--border); color:var(--muted); font-family:'DM Sans',sans-serif; font-size:0.78rem; padding:5px 14px; border-radius:50px; cursor:pointer; transition:all .2s; }
+  .sort-btn.active { background:rgba(192,132,252,0.15); border-color:var(--accent1); color:var(--accent1); }
+
+  /* TRENDING BADGE on card */
+  .trending-badge { display:inline-flex; align-items:center; gap:4px; background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(251,113,36,0.15)); border:1px solid rgba(251,191,36,0.3); border-radius:50px; padding:2px 10px; font-size:0.72rem; color:#fbbf24; font-weight:600; margin-bottom:8px; }
+
+  /* CARD */
+  .card { background:var(--surface); border:1px solid rgba(192,132,252,0.25); border-radius:18px; padding:20px; margin-bottom:14px; cursor:pointer; transition:border-color .2s,transform .2s,box-shadow .2s; animation:fadeUp .4s ease both; position:relative; box-shadow:0 4px 24px rgba(192,132,252,0.1); }
+  .card:hover { border-color:rgba(192,132,252,0.5); transform:translateY(-2px); box-shadow:0 8px 32px rgba(192,132,252,0.2); }
   @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
   .card-meta { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
   .avatar { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; flex-shrink:0; }
   .card-author { font-size:0.82rem; color:var(--muted); }
   .card-time { font-size:0.75rem; color:var(--muted); opacity:.6; margin-left:auto; }
-  .card-body { font-size:0.95rem; line-height:1.6; color:var(--text); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
-  .card-footer { display:flex; align-items:center; gap:16px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border); }
-  .card-action { display:flex; align-items:center; gap:5px; font-size:0.8rem; color:var(--muted); background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; transition:color .2s; padding:0; }
-  .card-action:hover { color:var(--accent1); }
-  .card-action.liked { color:var(--accent2); }
-  .card-action svg { width:15px; height:15px; }
+  .card-body { font-size:0.95rem; line-height:1.6; color:var(--text); display:-webkit-box; -webkit-line-clamp:10; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:6px; white-space:pre-wrap; word-break:break-word; }
+  .read-more { font-size:0.82rem; color:var(--accent1); margin-bottom:10px; display:none; cursor:pointer; font-weight:500; }
+  .read-more:hover { opacity:.8; }
+
+  /* REACTIONS */
+  .reactions-row { display:flex; flex-wrap:wrap; gap:5px; min-height:4px; margin-bottom:4px; }
+  .reaction-pill { display:inline-flex; align-items:center; gap:3px; background:var(--surface2); border:1px solid var(--border); border-radius:50px; padding:4px 10px; font-size:0.82rem; cursor:pointer; transition:all .15s; user-select:none; }
+  .reaction-pill.mine { border-color:var(--accent1); background:rgba(192,132,252,0.15); }
+  .reaction-pill:active { transform:scale(0.93); }
+  .reaction-pill .emoji { font-size:0.95rem; line-height:1; }
+  .reaction-pill .rcount { color:var(--muted); font-size:0.76rem; font-weight:500; }
+  .reaction-pill.mine .rcount { color:var(--accent1); }
+
+  /* CARD FOOTER */
+  .card-footer { display:flex; align-items:center; gap:10px; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
+  .footer-btn { display:flex; align-items:center; gap:5px; font-size:0.8rem; color:var(--muted); background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; transition:color .2s; padding:4px 8px; border-radius:8px; }
+  .footer-btn:hover { color:var(--accent1); }
+  .footer-btn svg { width:15px; height:15px; flex-shrink:0; }
+
+  /* REACT BUTTON — with pressed state */
+  .react-btn {
+    display:flex; align-items:center; gap:5px;
+    font-size:0.8rem; color:var(--muted);
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:50px; padding:5px 12px; cursor:pointer;
+    font-family:'DM Sans',sans-serif;
+    transition:all .15s; margin-left:auto;
+  }
+  .react-btn svg { width:15px; height:15px; flex-shrink:0; }
+  .react-btn:hover { border-color:rgba(192,132,252,0.4); color:var(--accent1); }
+  .react-btn.active {
+    background:rgba(192,132,252,0.18);
+    border-color:var(--accent1);
+    color:var(--accent1);
+    box-shadow:0 0 10px rgba(192,132,252,0.25);
+  }
+
+  /* REACTION PICKER */
+  .reaction-picker {
+    position:fixed; z-index:9999;
+    background:var(--surface);
+    border:1px solid rgba(192,132,252,0.4);
+    border-radius:50px;
+    padding:10px 16px;
+    display:none; gap:6px;
+    box-shadow:0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(192,132,252,0.1);
+    animation:popIn .18s cubic-bezier(.34,1.56,.64,1);
+    pointer-events:all;
+  }
+  .reaction-picker.show { display:flex; }
+  @keyframes popIn { from{opacity:0;transform:scale(.5)} to{opacity:1;transform:scale(1)} }
+  .pick-btn { background:none; border:none; font-size:1.8rem; cursor:pointer; padding:2px 4px; border-radius:50%; transition:transform .12s; line-height:1; display:flex; align-items:center; justify-content:center; }
+  .pick-btn:hover { transform:scale(1.4); }
+  .pick-btn:active { transform:scale(1.15); }
+
+  /* MODAL */
   .modal-backdrop { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); padding:20px; align-items:center; justify-content:center; }
   .modal-backdrop.open { display:flex; }
   .modal { background:var(--surface); border:1px solid var(--border); border-radius:22px; width:100%; max-width:560px; max-height:85vh; overflow-y:auto; padding:28px; animation:modalIn .25s ease; }
   @keyframes modalIn { from{opacity:0;transform:scale(.95) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
   .modal-close { float:right; background:var(--surface2); border:none; color:var(--muted); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; transition:color .2s; }
   .modal-close:hover { color:var(--text); }
-  .modal-body-text { font-size:1.05rem; line-height:1.7; color:var(--text); margin:20px 0 24px; }
+  .modal-body-text { font-size:1.05rem; line-height:1.7; color:var(--text); margin:20px 0 12px; user-select:text; -webkit-user-select:text; text-align:left; word-break:break-word; white-space:pre-wrap; overflow-wrap:break-word; }
+  .modal-reactions-row { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px; min-height:4px; }
+  .modal-react-wrap { margin-bottom:20px; }
+
+  /* COMMENT */
+  .comment { background:var(--surface2); border-radius:12px; padding:12px 14px; margin-bottom:10px; border:1px solid var(--border); }
+  .comment-meta { font-size:.75rem; color:var(--muted); margin-bottom:6px; }
+  .comment-text { font-size:.88rem; line-height:1.5; margin-bottom:8px; user-select:text; -webkit-user-select:text; white-space:pre-wrap; word-break:break-word; }
+  .comment-footer { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .comment-reactions { display:flex; flex-wrap:wrap; gap:4px; flex:1; }
+  .comment-react-btn {
+    display:inline-flex; align-items:center; gap:4px;
+    background:var(--bg); border:1px solid var(--border);
+    border-radius:50px; padding:3px 10px;
+    font-size:0.75rem; color:var(--muted); cursor:pointer;
+    font-family:'DM Sans',sans-serif;
+    transition:all .15s; margin-left:auto; flex-shrink:0;
+  }
+  .comment-react-btn svg { width:12px; height:12px; }
+  .comment-react-btn:hover { border-color:rgba(192,132,252,0.4); color:var(--accent1); }
+  .comment-react-btn.active { background:rgba(192,132,252,0.15); border-color:var(--accent1); color:var(--accent1); }
+
   .comments-section h3 { font-family:'Syne',sans-serif; font-weight:700; margin-bottom:16px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; font-size:.75rem; }
-  .comment { background:var(--surface2); border-radius:12px; padding:12px 14px; margin-bottom:10px; font-size:.88rem; line-height:1.5; border:1px solid var(--border); }
-  .comment-meta { font-size:.75rem; color:var(--muted); margin-bottom:4px; }
-  .comment-input-row { display:flex; gap:10px; margin-top:16px; }
-  .comment-input { flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:12px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:.88rem; padding:10px 14px; outline:none; transition:border-color .2s; }
+  .comment-input-row { display:flex; gap:10px; margin-top:16px; align-items:flex-end; }
+  .comment-input { flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:12px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:.88rem; padding:12px 14px; outline:none; transition:border-color .2s; user-select:text; -webkit-user-select:text; resize:none; min-height:80px; line-height:1.5; }
   .comment-input:focus { border-color:var(--accent1); }
   .comment-input::placeholder { color:var(--muted); }
-  .comment-send { background:var(--grad); border:none; color:#fff; border-radius:12px; padding:10px 18px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:.85rem; cursor:pointer; transition:opacity .2s; white-space:nowrap; }
+  .comment-send { background:var(--grad); border:none; color:#fff; border-radius:12px; padding:12px 18px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:.85rem; cursor:pointer; transition:opacity .2s; white-space:nowrap; flex-shrink:0; }
   .comment-send:hover { opacity:.85; }
   .comment-send:disabled { opacity:.5; cursor:not-allowed; }
-  .loading { text-align:center; padding:60px 20px; color:var(--muted); }
+
+  .search-wrap { margin-bottom:16px; position:relative; }
+  .search-input { width:100%; background:var(--surface); border:1px solid var(--border); border-radius:50px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.88rem; padding:11px 18px 11px 42px; outline:none; transition:border-color .2s; }
+  .search-input:focus { border-color:var(--accent1); }
+  .search-input::placeholder { color:var(--muted); }
+  .search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--muted); width:16px; height:16px; pointer-events:none; }
+  .confession-num { font-size:0.72rem; font-weight:700; color:var(--accent1); background:rgba(192,132,252,0.12); border:1px solid rgba(192,132,252,0.2); border-radius:50px; padding:2px 9px; margin-left:auto; flex-shrink:0; letter-spacing:0.02em; }
+
+
   .spinner { width:36px; height:36px; border-radius:50%; border:3px solid var(--surface2); border-top-color:var(--accent1); animation:spin .7s linear infinite; margin:0 auto 16px; }
   @keyframes spin { to{transform:rotate(360deg)} }
   .empty { text-align:center; padding:60px 20px; color:var(--muted); }
-  .blocked-msg { text-align:center; padding:60px 20px; color:#f87171; font-size:.95rem; }
-  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--surface2); border:1px solid rgba(192,132,252,0.3); color:var(--text); font-size:.88rem; padding:12px 22px; border-radius:50px; z-index:999; transition:transform .3s ease; white-space:nowrap; }
+  .blocked-msg { background:rgba(248,113,113,0.1); border:1px solid rgba(248,113,113,0.2); border-radius:16px; padding:20px; text-align:center; color:#f87171; }
+
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--surface2); border:1px solid rgba(192,132,252,0.3); color:var(--text); font-size:.88rem; padding:12px 22px; border-radius:50px; z-index:99999; transition:transform .3s ease; white-space:nowrap; }
   .toast.show { transform:translateX(-50%) translateY(0); }
+
   ::-webkit-scrollbar { width:4px; }
   ::-webkit-scrollbar-track { background:transparent; }
   ::-webkit-scrollbar-thumb { background:var(--surface2); border-radius:4px; }
@@ -112,35 +196,60 @@
 <div class="submit-wrap">
   <div class="submit-card" id="submitCard">
     <textarea id="confessInput" placeholder="Type your confession, secret or hot take... 🤫&#10;No name. No trace. Just vibes."></textarea>
-    <div class="submit-row">
-      <div class="anon-tag"><div class="anon-dot"></div>100% Anonymous</div>
-      <button class="submit-btn" id="submitBtn" onclick="submitConfession()">Send Confession 🔒</button>
+    <div class="submit-row" style="justify-content:center;">
+      <button class="submit-btn" id="submitBtn" onclick="submitConfession()">Send Anonymous Message 🔒</button>
     </div>
   </div>
 </div>
 
 <div class="feed-section">
   <div class="feed-header">
-    <h2>Confessions Feed</h2>
+    <h2>Feed</h2>
     <span class="badge" id="countBadge">...</span>
+  </div>
+  <div class="feed-tabs">
+    <button class="feed-tab active" id="sortNewest" onclick="setSort('newest')">Newest</button>
+    <button class="feed-tab" id="sortOldest" onclick="setSort('oldest')">Oldest</button>
+    <button class="feed-tab" id="tabTrending" onclick="switchFeedTab('trending')">🔥 Trending</button>
+  </div>
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
+    <input class="search-input" id="searchInput" placeholder="Search by #number or keyword..." oninput="handleSearch()">
   </div>
   <div id="feed"><div class="loading"><div class="spinner"></div>Loading confessions...</div></div>
 </div>
 
+<!-- Modal -->
 <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
   <div class="modal" id="modal">
     <button class="modal-close" onclick="closeModalDirect()">✕</button>
     <div class="card-meta" id="modalMeta"></div>
     <div class="modal-body-text" id="modalText"></div>
+    <div class="modal-reactions-row" id="modalReactions"></div>
+    <div class="modal-react-wrap">
+      <button class="react-btn" id="modalReactBtn" onclick="togglePickerForModal(event)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3" stroke-linecap="round"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3" stroke-linecap="round"/></svg>
+        React
+      </button>
+    </div>
     <div class="comments-section">
       <h3>Comments</h3>
       <div id="modalComments"><div class="loading"><div class="spinner"></div></div></div>
       <div class="comment-input-row">
-        <input class="comment-input" id="commentInput" placeholder="Drop an anonymous comment..." onkeydown="if(event.key==='Enter')addComment()">
+        <textarea class="comment-input" id="commentInput" placeholder="Drop an anonymous comment..."></textarea>
         <button class="comment-send" id="commentBtn" onclick="addComment()">Send</button>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Reaction Picker — rendered once, moved via JS -->
+<div class="reaction-picker" id="reactionPicker">
+  <button class="pick-btn" onclick="submitReaction('😂')">😂</button>
+  <button class="pick-btn" onclick="submitReaction('😡')">😡</button>
+  <button class="pick-btn" onclick="submitReaction('😲')">😲</button>
+  <button class="pick-btn" onclick="submitReaction('😢')">😢</button>
+  <button class="pick-btn" onclick="submitReaction('🔥')">🔥</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -150,7 +259,7 @@
   import {
     getFirestore, collection, addDoc, doc, onSnapshot,
     orderBy, query, updateDoc, increment, serverTimestamp,
-    getDoc, getDocs, getDocFromServer
+    getDoc, getDocs
   } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
   const app = initializeApp({
@@ -163,189 +272,462 @@
   });
 
   const db = getFirestore(app);
-
+  const EMOJIS = ['😂','😡','😲','😢','🔥'];
   const AVATARS = [
-    { bg:'linear-gradient(135deg,#c084fc,#f472b6)', label:'😶‍🌫️' },
-    { bg:'linear-gradient(135deg,#818cf8,#c084fc)', label:'🕶️' },
-    { bg:'linear-gradient(135deg,#f472b6,#fb923c)', label:'🫣' },
-    { bg:'linear-gradient(135deg,#34d399,#818cf8)', label:'🤫' },
-    { bg:'linear-gradient(135deg,#fbbf24,#f472b6)', label:'👀' },
+    {bg:'linear-gradient(135deg,#c084fc,#f472b6)',label:'😶‍🌫️'},
+    {bg:'linear-gradient(135deg,#818cf8,#c084fc)',label:'🕶️'},
+    {bg:'linear-gradient(135deg,#f472b6,#fb923c)',label:'🫣'},
+    {bg:'linear-gradient(135deg,#34d399,#818cf8)',label:'🤫'},
+    {bg:'linear-gradient(135deg,#fbbf24,#f472b6)',label:'👀'},
   ];
 
   let currentId = null;
-  let liked = new Set(JSON.parse(localStorage.getItem('nsuk_liked') || '[]'));
   let cache = [];
   let userIP = 'unknown';
+  let myReactions = JSON.parse(localStorage.getItem('nsuk_reactions')||'{}');
+  let currentFeedTab = 'latest';
+  let currentSort = 'newest';
+  let numberMap = {}; // confessionId -> number (1-based, oldest = #1)
 
-  // Get user IP
-  try {
-    const r = await fetch('https://api.ipify.org?format=json');
-    const d = await r.json();
-    userIP = d.ip;
-  } catch(e) {}
+  // Build number map from cache sorted oldest first
+  function buildNumberMap(docs) {
+    const sorted = [...docs].reverse(); // oldest first
+    sorted.forEach((d, i) => { numberMap[d.id] = i + 1; });
+  }
 
-  // Check if IP is blocked
+  // Search handler
+  window.handleSearch = () => {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase().replace(/^#/, '');
+    const num = parseInt(q);
+    if (!q) { renderCurrentFeed(); return; }
+    let results;
+    if (!isNaN(num)) {
+      // Search by number
+      results = [...cache].filter(d => numberMap[d.id] === num);
+    } else {
+      // Search by keyword in text
+      results = [...cache].filter(d => d.data().text.toLowerCase().includes(q));
+    }
+    renderFeed(results, false, true);
+  };
+
+  // Picker state
+  let pickerTarget = null;
+  let activeReactBtn = null;
+
+  // Trending score formula
+  function trendingScore(data) {
+    const reactions = Object.values(data.reactions||{}).reduce((a,b)=>a+b, 0);
+    const comments = data.commentCount || 0;
+    const base = reactions * 3 + comments * 5;
+    const now = Date.now();
+    const created = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
+    const ageHours = (now - created) / 3600000;
+    let multiplier = 1;
+    if (ageHours < 24) multiplier = 1.5;
+    else if (ageHours > 168) multiplier = 0.5;
+    return base * multiplier;
+  }
+
+  window.switchFeedTab = (tab) => {
+    currentFeedTab = tab;
+    document.getElementById('sortNewest').classList.remove('active');
+    document.getElementById('sortOldest').classList.remove('active');
+    document.getElementById('tabTrending').classList.add('active');
+    renderCurrentFeed();
+  };
+
+  window.setSort = (sort) => {
+    currentFeedTab = 'latest';
+    currentSort = sort;
+    document.getElementById('sortNewest').classList.toggle('active', sort==='newest');
+    document.getElementById('sortOldest').classList.toggle('active', sort==='oldest');
+    document.getElementById('tabTrending').classList.remove('active');
+    renderCurrentFeed();
+  };
+
+  function renderCurrentFeed() {
+    if (currentFeedTab === 'trending') {
+      const sorted = [...cache].sort((a,b) => trendingScore(b.data()) - trendingScore(a.data()));
+      renderFeed(sorted, true);
+    } else {
+      const sorted = currentSort === 'oldest' ? [...cache].reverse() : [...cache];
+      renderFeed(sorted, false);
+    }
+  }
+
+  // Get IP
+  try { const r = await fetch('https://api.ipify.org?format=json'); userIP=(await r.json()).ip; } catch(e){}
+
+  // Block check
   async function isBlocked(ip) {
-    try {
-      const ref = doc(db, 'blockedIPs', ip.replace(/\./g,'_'));
-      const snap = await getDoc(ref);
-      return snap.exists();
-    } catch(e) { return false; }
+    try { return (await getDoc(doc(db,'blockedIPs',ip.replace(/[.:]/g,'_')))).exists(); } catch(e){ return false; }
+  }
+  if (await isBlocked(userIP)) {
+    document.getElementById('submitCard').innerHTML=`<div class="blocked-msg">🚫 You have been blocked from submitting confessions.</div>`;
   }
 
-  // Check block on load
-  const blocked = await isBlocked(userIP);
-  if (blocked) {
-    document.getElementById('submitCard').innerHTML = `<div class="blocked-msg">🚫 You have been blocked from submitting confessions.</div>`;
+  // Rate limit
+  function checkRateLimit() {
+    const key='nsuk_rl_'+userIP, now=Date.now();
+    let d=JSON.parse(localStorage.getItem(key)||'{"count":0,"reset":0}');
+    if(now>d.reset) d={count:0,reset:now+3600000};
+    if(d.count>=5) return false;
+    d.count++; localStorage.setItem(key,JSON.stringify(d)); return true;
   }
 
-  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const esc = s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
   function timeAgo(ts) {
-    if (!ts) return 'just now';
-    const d = ts.toDate ? ts.toDate() : new Date(ts);
-    const s = Math.floor((Date.now()-d)/1000);
-    if (s < 60) return 'just now';
-    if (s < 3600) return Math.floor(s/60)+'m ago';
-    if (s < 86400) return Math.floor(s/3600)+'h ago';
-    if (s < 604800) return Math.floor(s/86400)+'d ago';
+    if(!ts) return 'just now';
+    const d=ts.toDate?ts.toDate():new Date(ts), s=Math.floor((Date.now()-d)/1000);
+    if(s<60) return 'just now'; if(s<3600) return Math.floor(s/60)+'m ago';
+    if(s<86400) return Math.floor(s/3600)+'h ago'; if(s<604800) return Math.floor(s/86400)+'d ago';
     return d.toLocaleDateString();
   }
 
   function getAv(id) {
-    let h = 0;
-    for (let c of String(id)) h = (h*31 + c.charCodeAt(0)) & 0xffffffff;
-    return AVATARS[Math.abs(h) % AVATARS.length];
+    let h=0; for(let c of String(id)) h=(h*31+c.charCodeAt(0))&0xffffffff;
+    return AVATARS[Math.abs(h)%AVATARS.length];
   }
 
-  function renderFeed(docs) {
-    cache = docs;
-    document.getElementById('countBadge').textContent = docs.length;
-    const feed = document.getElementById('feed');
-    if (!docs.length) {
-      feed.innerHTML = `<div class="empty"><p>No confessions yet. Be the first! 👻</p></div>`;
+  function saveMyReactions() { localStorage.setItem('nsuk_reactions',JSON.stringify(myReactions)); }
+
+  function buildPills(reactions, key, isComment=false) {
+    if(!reactions) return '';
+    const myE=myReactions[key];
+    return EMOJIS.filter(e=>(reactions[e]||0)>0).map(e=>
+      `<span class="reaction-pill ${myE===e?'mine':''}" onclick="event.stopPropagation();quickReact('${key}','${e}',${isComment})">
+        <span class="emoji">${e}</span><span class="rcount">${reactions[e]}</span>
+      </span>`
+    ).join('');
+  }
+
+  // ---- PICKER ----
+
+  // Toggle picker from a react button
+  function togglePicker(btnEl, target) {
+    const picker = document.getElementById('reactionPicker');
+    const isOpen = picker.classList.contains('show');
+
+    // If already open for same button — close it
+    if(isOpen && activeReactBtn === btnEl) {
+      closePicker();
       return;
     }
-    feed.innerHTML = docs.map((d,i) => {
-      const av = getAv(d.id), data = d.data(), isLiked = liked.has(d.id);
-      return `<div class="card" style="animation-delay:${i*.06}s" onclick="openModal('${d.id}')">
+
+    // Close any existing picker first
+    closePicker();
+
+    // Set new target & active button
+    pickerTarget = target;
+    activeReactBtn = btnEl;
+    btnEl.classList.add('active');
+
+    // Position picker above the button
+    const rect = btnEl.getBoundingClientRect();
+    picker.style.display = 'flex'; // temp show to measure width
+    const pw = picker.offsetWidth || 290;
+    const ph = picker.offsetHeight || 60;
+
+    let left = rect.left + rect.width/2 - pw/2;
+    left = Math.max(8, Math.min(left, window.innerWidth - pw - 8));
+    const top = rect.top - ph - 10;
+
+    picker.style.left = left + 'px';
+    picker.style.top = top + 'px';
+    picker.classList.add('show');
+  }
+
+  window.closePicker = () => {
+    const picker = document.getElementById('reactionPicker');
+    picker.classList.remove('show');
+    picker.style.display = '';
+    if(activeReactBtn) { activeReactBtn.classList.remove('active'); activeReactBtn = null; }
+    pickerTarget = null;
+  };
+
+  // Card react button toggle
+  window.togglePickerForCard = (btnEl, confessionId) => {
+    togglePicker(btnEl, {type:'confession', confessionId});
+  };
+
+  // Modal confession react button
+  window.togglePickerForModal = (e) => {
+    e.stopPropagation();
+    const btn = document.getElementById('modalReactBtn');
+    togglePicker(btn, {type:'confession', confessionId: currentId});
+  };
+
+  // Comment react button
+  window.togglePickerForComment = (btnEl, confessionId, commentId) => {
+    togglePicker(btnEl, {type:'comment', confessionId, commentId});
+  };
+
+  // Close picker when clicking outside
+  document.addEventListener('click', (e) => {
+    const picker = document.getElementById('reactionPicker');
+    if(picker.classList.contains('show') && !picker.contains(e.target) && e.target !== activeReactBtn && !activeReactBtn?.contains(e.target)) {
+      closePicker();
+    }
+  });
+
+  // Submit reaction from picker
+  window.submitReaction = async (emoji) => {
+    if(!pickerTarget) { closePicker(); return; }
+    const {type, confessionId, commentId} = pickerTarget;
+    closePicker(); // close FIRST then react
+    if(type==='confession') await reactConfession(confessionId, emoji);
+    else await reactComment(confessionId, commentId, emoji);
+  };
+
+  // Tap existing pill to toggle
+  window.quickReact = async (key, emoji, isComment) => {
+    if(isComment) {
+      const parts = key.split('_');
+      const commentId = parts.pop();
+      const confessionId = parts.join('_');
+      await reactComment(confessionId, commentId, emoji);
+    } else {
+      await reactConfession(key, emoji);
+    }
+  };
+
+  async function reactConfession(id, emoji) {
+    const prev = myReactions[id];
+    const update = {};
+    if(prev===emoji) { update[`reactions.${emoji}`]=increment(-1); delete myReactions[id]; }
+    else { if(prev) update[`reactions.${prev}`]=increment(-1); update[`reactions.${emoji}`]=increment(1); myReactions[id]=emoji; }
+    saveMyReactions();
+    // Optimistic update card pills
+    const rpEl = document.getElementById('rpills-'+id);
+    if(rpEl) {
+      const cached = cache.find(d=>d.id===id);
+      if(cached) {
+        const r = {...(cached.data().reactions||{})};
+        if(prev===emoji) r[emoji]=(r[emoji]||1)-1;
+        else { if(prev&&r[prev]) r[prev]--; r[emoji]=(r[emoji]||0)+1; }
+        rpEl.innerHTML = buildPills(r, id);
+      }
+    }
+    try {
+      await updateDoc(doc(db,'confessions',id), update);
+      if(currentId===id) renderModalReactions();
+    } catch(e) { showToast('Error reacting.'); }
+  }
+
+  async function reactComment(confessionId, commentId, emoji) {
+    const key = confessionId+'_'+commentId;
+    const prev = myReactions[key];
+    const update = {};
+    if(prev===emoji) { update[`reactions.${emoji}`]=increment(-1); delete myReactions[key]; }
+    else { if(prev) update[`reactions.${prev}`]=increment(-1); update[`reactions.${emoji}`]=increment(1); myReactions[key]=emoji; }
+    saveMyReactions();
+    try {
+      await updateDoc(doc(db,'confessions',confessionId,'comments',commentId), update);
+      // Refresh comment pills
+      const snap = await getDoc(doc(db,'confessions',confessionId,'comments',commentId));
+      const pEl = document.getElementById('cpills-'+commentId);
+      if(pEl && snap.exists()) pEl.innerHTML = buildPills(snap.data().reactions, key, true);
+    } catch(e) { showToast('Error reacting.'); }
+  }
+
+  // ---- FEED ----
+  function renderFeed(docs, isTrending=false, isSearch=false) {
+    if(!isSearch) document.getElementById('countBadge').textContent = cache.length;
+    const feed = document.getElementById('feed');
+    if(!docs.length) {
+      feed.innerHTML = isTrending
+        ? `<div class="empty"><p>No trending confessions yet. React & comment to make things hot! 🔥</p></div>`
+        : `<div class="empty"><p>No confessions found. 👻</p></div>`;
+      return;
+    }
+    feed.innerHTML = docs.map((d,i)=>{
+      const av=getAv(d.id), data=d.data();
+      const num = numberMap[d.id] || '?';
+      return `<div class="card" style="animation-delay:${i*.06}s" id="crd-${d.id}" onclick="openModal('${d.id}')">
         <div class="card-meta">
           <div class="avatar" style="background:${av.bg}">${av.label}</div>
           <span class="card-author">Anonymous</span>
           <span class="card-time">${timeAgo(data.createdAt)}</span>
+          <span class="confession-num">#${num}</span>
         </div>
-        <div class="card-body">${esc(data.text)}</div>
+        <div class="card-body" id="cbody-${d.id}">${esc(data.text)}</div>
+        <div class="read-more" id="rmore-${d.id}" onclick="event.stopPropagation();openModal('${d.id}')">Read more →</div>
+        <div class="reactions-row" id="rpills-${d.id}">${buildPills(data.reactions,d.id)}</div>
         <div class="card-footer">
-          <button class="card-action ${isLiked?'liked':''}" onclick="event.stopPropagation();toggleLike('${d.id}',this)">
-            <svg viewBox="0 0 24 24" fill="${isLiked?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-            <span id="likes-${d.id}">${data.likes||0}</span>
-          </button>
-          <button class="card-action" onclick="event.stopPropagation();openModal('${d.id}')">
+          <button class="footer-btn" onclick="event.stopPropagation();openModal('${d.id}')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-            <span>${data.commentCount||0}</span> comment${(data.commentCount||0)!==1?'s':''}
+            ${data.commentCount||0} comment${(data.commentCount||0)!==1?'s':''}
+          </button>
+          <button class="react-btn" onclick="event.stopPropagation();togglePickerForCard(this,'${d.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3" stroke-linecap="round"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3" stroke-linecap="round"/></svg>
+            React
+          </button>
+          <button class="footer-btn" onclick="event.stopPropagation();shareConfession('${d.id}',${num})" title="Share">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
+        </div>
+      </div>`;
+    }).join('');
+    // Show "Read more" only when text is actually truncated
+    requestAnimationFrame(() => {
+      docs.forEach(d => {
+        const el = document.getElementById('cbody-'+d.id);
+        const rm = document.getElementById('rmore-'+d.id);
+        if(el && rm && el.scrollHeight > el.clientHeight + 2) rm.style.display = 'block';
+      });
+    });
+  }
+
+  onSnapshot(query(collection(db,'confessions'),orderBy('createdAt','desc')), snap=>{
+    cache = snap.docs;
+    buildNumberMap(snap.docs);
+    renderCurrentFeed();
+  });
+
+  // ---- MODAL ----
+  window.openModal = async (id) => {
+    closePicker();
+    currentId = id;
+    const cached = cache.find(d=>d.id===id);
+    const data = cached?cached.data():(await getDoc(doc(db,'confessions',id))).data();
+    const av = getAv(id);
+    const num = numberMap[id] || '?';
+    // Update URL
+    history.pushState({confessionId:id}, '', `#${num}`);
+    document.getElementById('modalMeta').innerHTML=`
+      <div class="avatar" style="background:${av.bg}">${av.label}</div>
+      <span style="font-size:.82rem;color:var(--muted)">Anonymous</span>
+      <span style="font-size:.75rem;color:var(--muted);opacity:.6;margin-left:auto">${timeAgo(data.createdAt)}</span>
+      <span class="confession-num">#${num}</span>`;
+    document.getElementById('modalText').textContent = data.text;
+    renderModalReactions(data);
+    // Add share button to modal
+    document.getElementById('modalReactBtn').parentElement.innerHTML = `
+      <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+        <button class="react-btn" id="modalReactBtn" onclick="togglePickerForModal(event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3" stroke-linecap="round"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3" stroke-linecap="round"/></svg>
+          React
+        </button>
+        <button class="react-btn" onclick="shareConfession('${id}',${num})" style="margin-left:0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share #${num}
+        </button>
+      </div>`;
+    document.getElementById('modalComments').innerHTML='<div class="loading"><div class="spinner"></div></div>';
+    document.getElementById('modalBackdrop').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    const snap = await getDocs(query(collection(db,'confessions',id,'comments'),orderBy('createdAt','asc')));
+    renderComments(snap.docs, id);
+  };
+
+  // Share confession
+  window.shareConfession = (id, num) => {
+    const url = `${location.origin}${location.pathname}#${num}`;
+    if (navigator.share) {
+      navigator.share({ title: `Anonymous #${num}`, text: `Check out Anonymous confession #${num} on NSUK Confessions!`, url });
+    } else {
+      navigator.clipboard.writeText(url).then(() => showToast(`Link copied! 🔗 #${num}`));
+    }
+  };
+
+  // Deep link: open modal if URL has #number on load
+  async function handleDeepLink() {
+    const hash = location.hash.replace('#','').trim();
+    const num = parseInt(hash);
+    if (!isNaN(num) && num > 0) {
+      // Wait for cache to be populated then open
+      const tryOpen = () => {
+        const entry = Object.entries(numberMap).find(([,n]) => n === num);
+        if (entry) { openModal(entry[0]); }
+        else if (cache.length > 0) { showToast(`Confession #${num} not found.`); }
+        else { setTimeout(tryOpen, 400); }
+      };
+      setTimeout(tryOpen, 600);
+    }
+  }
+  handleDeepLink();
+
+  // Handle browser back button
+  window.addEventListener('popstate', () => {
+    if (!location.hash) closeModalDirect();
+  });
+
+  function renderModalReactions(data) {
+    const cached = cache.find(d=>d.id===currentId);
+    const d = data||(cached?cached.data():null);
+    const el = document.getElementById('modalReactions');
+    if(el&&d) el.innerHTML = buildPills(d.reactions, currentId);
+  }
+
+  function renderComments(docs, confessionId) {
+    const el = document.getElementById('modalComments');
+    if(!docs.length) { el.innerHTML=`<p style="color:var(--muted);font-size:.85rem;margin-bottom:12px">No comments yet. Be the first! 👇</p>`; return; }
+    el.innerHTML = docs.map(d=>{
+      const data=d.data(), key=confessionId+'_'+d.id;
+      return `<div class="comment" id="cm-${d.id}">
+        <div class="comment-meta">Anonymous comment · ${timeAgo(data.createdAt)}</div>
+        <div class="comment-text">${esc(data.text)}</div>
+        <div class="comment-footer">
+          <div class="comment-reactions" id="cpills-${d.id}">${buildPills(data.reactions,key,true)}</div>
+          <button class="comment-react-btn" onclick="event.stopPropagation();togglePickerForComment(this,'${confessionId}','${d.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3" stroke-linecap="round"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3" stroke-linecap="round"/></svg>
+            React
           </button>
         </div>
       </div>`;
     }).join('');
   }
 
-  // Live feed
-  onSnapshot(query(collection(db,'confessions'), orderBy('createdAt','desc')), snap => renderFeed(snap.docs));
+  window.addComment = async () => {
+    const input=document.getElementById('commentInput');
+    const btn=document.getElementById('commentBtn');
+    const text=input.value.trim();
+    if(!text||!currentId) return;
+    btn.disabled=true;
+    try {
+      await addDoc(collection(db,'confessions',currentId,'comments'),{text,createdAt:serverTimestamp(),ip:userIP,reactions:{}});
+      await updateDoc(doc(db,'confessions',currentId),{commentCount:increment(1)});
+      input.value='';
+      const snap=await getDocs(query(collection(db,'confessions',currentId,'comments'),orderBy('createdAt','asc')));
+      renderComments(snap.docs,currentId);
+      showToast('Comment added! 💬');
+      document.getElementById('modal').scrollTop=99999;
+    } catch(e){ showToast('Error. Try again!'); }
+    btn.disabled=false;
+  };
 
   window.submitConfession = async () => {
-    if (await isBlocked(userIP)) { showToast('🚫 You are blocked from submitting.'); return; }
-    const ta = document.getElementById('confessInput');
-    const btn = document.getElementById('submitBtn');
-    const text = ta.value.trim();
-    if (!text) { showToast('Write something first! ✍️'); return; }
-    if (text.length < 5) { showToast('Too short! Say more 😏'); return; }
-    btn.disabled = true; btn.textContent = 'Sending...';
+    if(await isBlocked(userIP)){ showToast('🚫 You are blocked.'); return; }
+    if(!checkRateLimit()){ showToast('⏳ Too many confessions! Try again in an hour.'); return; }
+    const ta=document.getElementById('confessInput');
+    const btn=document.getElementById('submitBtn');
+    const text=ta.value.trim();
+    if(!text){ showToast('Write something first! ✍️'); return; }
+    if(text.length<5){ showToast('Too short! Say more 😏'); return; }
+    btn.disabled=true; btn.textContent='Sending...';
     try {
-      await addDoc(collection(db,'confessions'), {
-        text,
-        createdAt: serverTimestamp(),
-        likes: 0,
-        commentCount: 0,
-        ip: userIP
-      });
-      ta.value = '';
+      await addDoc(collection(db,'confessions'),{text,createdAt:serverTimestamp(),commentCount:0,ip:userIP,reactions:{}});
+      ta.value='';
       showToast('Confession sent! 🔒');
-      window.scrollTo({ top: document.querySelector('.feed-section').offsetTop - 80, behavior:'smooth' });
-    } catch(e) { showToast('Error. Try again!'); }
-    btn.disabled = false; btn.textContent = 'Send Confession 🔒';
+      window.scrollTo({top:document.querySelector('.feed-section').offsetTop-80,behavior:'smooth'});
+    } catch(e){ showToast('Error. Try again!'); }
+    btn.disabled=false; btn.textContent='Send Confession 🔒';
   };
 
-  window.toggleLike = async (id, btn) => {
-    const ref = doc(db,'confessions',id);
-    const likeEl = document.getElementById('likes-'+id);
-    if (liked.has(id)) {
-      liked.delete(id); btn.classList.remove('liked');
-      btn.querySelector('svg').setAttribute('fill','none');
-      if (likeEl) likeEl.textContent = Math.max(0,parseInt(likeEl.textContent)-1);
-      await updateDoc(ref,{likes:increment(-1)});
-    } else {
-      liked.add(id); btn.classList.add('liked');
-      btn.querySelector('svg').setAttribute('fill','currentColor');
-      if (likeEl) likeEl.textContent = parseInt(likeEl.textContent)+1;
-      await updateDoc(ref,{likes:increment(1)});
-    }
-    localStorage.setItem('nsuk_liked', JSON.stringify([...liked]));
-  };
+  window.closeModal = (e) => { if(e.target===document.getElementById('modalBackdrop')){ closePicker(); closeModalDirect(); } };
+  window.closeModalDirect = () => { closePicker(); document.getElementById('modalBackdrop').classList.remove('open'); document.body.style.overflow=''; currentId=null; history.pushState({},'',location.pathname); };
 
-  window.openModal = async (id) => {
-    currentId = id;
-    const cached = cache.find(d => d.id === id);
-    const data = cached ? cached.data() : (await getDoc(doc(db,'confessions',id))).data();
-    const av = getAv(id);
-    document.getElementById('modalMeta').innerHTML = `
-      <div class="avatar" style="background:${av.bg}">${av.label}</div>
-      <span class="card-author">Anonymous</span>
-      <span class="card-time" style="margin-left:auto">${timeAgo(data.createdAt)}</span>`;
-    document.getElementById('modalText').textContent = data.text;
-    document.getElementById('modalComments').innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-    document.getElementById('modalBackdrop').classList.add('open');
-    document.body.style.overflow = 'hidden';
-    const snap = await getDocs(query(collection(db,'confessions',id,'comments'), orderBy('createdAt','asc')));
-    renderComments(snap.docs);
-  };
+  window.showToast = (msg) => { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); };
 
-  function renderComments(docs) {
-    const el = document.getElementById('modalComments');
-    if (!docs.length) { el.innerHTML = `<p style="color:var(--muted);font-size:.85rem;margin-bottom:12px">No comments yet. Be the first! 👇</p>`; return; }
-    el.innerHTML = docs.map(d => {
-      const data = d.data();
-      return `<div class="comment"><div class="comment-meta">Anonymous · ${timeAgo(data.createdAt)}</div>${esc(data.text)}</div>`;
-    }).join('');
-  }
-
-  window.addComment = async () => {
-    const input = document.getElementById('commentInput');
-    const btn = document.getElementById('commentBtn');
-    const text = input.value.trim();
-    if (!text || !currentId) return;
-    btn.disabled = true;
-    try {
-      await addDoc(collection(db,'confessions',currentId,'comments'), {
-        text, createdAt: serverTimestamp(), ip: userIP
-      });
-      await updateDoc(doc(db,'confessions',currentId),{commentCount:increment(1)});
-      input.value = '';
-      const snap = await getDocs(query(collection(db,'confessions',currentId,'comments'), orderBy('createdAt','asc')));
-      renderComments(snap.docs);
-      showToast('Comment added! 💬');
-      document.getElementById('modal').scrollTop = 99999;
-    } catch(e) { showToast('Error. Try again!'); }
-    btn.disabled = false;
-  };
-
-  window.closeModal = (e) => { if (e.target===document.getElementById('modalBackdrop')) closeModalDirect(); };
-  window.closeModalDirect = () => { document.getElementById('modalBackdrop').classList.remove('open'); document.body.style.overflow=''; currentId=null; };
-
-  window.showToast = (msg) => {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'), 2800);
-  };
+  // Security
+  document.addEventListener('contextmenu',e=>e.preventDefault());
+  document.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&['s','u','p'].includes(e.key.toLowerCase())) e.preventDefault();
+    if((e.ctrlKey||e.metaKey)&&e.shiftKey&&['i','j','c'].includes(e.key.toLowerCase())) e.preventDefault();
+    if(e.key==='F12') e.preventDefault();
+  });
 </script>
 </body>
 </html>
