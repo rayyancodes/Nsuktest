@@ -40,7 +40,7 @@
   .submit-btn:hover { opacity:.85; transform:scale(1.03); }
   .submit-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
 
-  .feed-section { position:relative; z-index:1; max-width:640px; margin:0 auto; padding:0 24px 80px; }
+  .feed-section { position:relative; z-index:1; max-width:640px; margin:0 auto; padding:0 10px 80px; }
   .feed-header { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
   .feed-header h2 { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; }
   .badge { background:rgba(192,132,252,0.15); color:var(--accent1); border:1px solid rgba(192,132,252,0.25); border-radius:50px; font-size:0.75rem; font-weight:600; padding:2px 10px; }
@@ -60,9 +60,9 @@
   .trending-badge { display:inline-flex; align-items:center; gap:4px; background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(251,113,36,0.15)); border:1px solid rgba(251,191,36,0.3); border-radius:50px; padding:2px 10px; font-size:0.72rem; color:#fbbf24; font-weight:600; margin-bottom:8px; }
 
   /* CARD */
-  .card { background:var(--surface); border:1px solid rgba(192,132,252,0.25); border-radius:18px; padding:20px; margin-bottom:14px; cursor:pointer; transition:border-color .2s,transform .2s,box-shadow .2s; animation:fadeUp .4s ease both; position:relative; box-shadow:0 4px 24px rgba(192,132,252,0.1); }
-  .card:hover { border-color:rgba(192,132,252,0.5); transform:translateY(-2px); box-shadow:0 8px 32px rgba(192,132,252,0.2); }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .card { background:var(--surface); border:1px solid rgba(192,132,252,0.6); border-radius:18px; padding:14px 14px; margin-bottom:14px; cursor:pointer; transition:border-color .2s,transform .2s,box-shadow .2s; animation:fadeUp .4s ease both; animation-fill-mode:forwards; position:relative; box-shadow:0 0 8px rgba(192,132,252,0.2), 0 0 16px rgba(192,132,252,0.1); }
+  .card:hover { border-color:rgba(192,132,252,0.9); transform:translateY(-2px); box-shadow:0 0 16px rgba(192,132,252,0.35), 0 0 32px rgba(192,132,252,0.2); }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px);box-shadow:none} to{opacity:1;transform:translateY(0);box-shadow:0 0 8px rgba(192,132,252,0.2), 0 0 16px rgba(192,132,252,0.1)} }
   .card-meta { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
   .avatar { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; flex-shrink:0; }
   .card-author { font-size:0.82rem; color:var(--muted); }
@@ -123,15 +123,16 @@
   .pick-btn:active { transform:scale(1.15); }
 
   /* MODAL */
-  .modal-backdrop { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); padding:20px; align-items:center; justify-content:center; }
+  .modal-backdrop { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); padding:10px; align-items:center; justify-content:center; }
   .modal-backdrop.open { display:flex; }
-  .modal { background:var(--surface); border:1px solid var(--border); border-radius:22px; width:100%; max-width:560px; max-height:85vh; overflow-y:auto; padding:28px; animation:modalIn .25s ease; }
+  .modal { background:transparent; border:none; border-radius:22px; width:100%; max-width:560px; max-height:85vh; overflow-y:auto; padding:0; animation:modalIn .25s ease; }
+  .modal-confession { padding:14px; border:1px solid rgba(192,132,252,0.6); box-shadow:0 0 8px rgba(192,132,252,0.2), 0 0 16px rgba(192,132,252,0.1); background:var(--surface); border-radius:22px; display:inline-block; width:100%; }
+  .modal-comments-wrap { padding:14px; background:var(--surface); border-radius:22px; margin-top:10px; border:1px solid var(--border); }
   @keyframes modalIn { from{opacity:0;transform:scale(.95) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
   .modal-close { float:right; background:var(--surface2); border:none; color:var(--muted); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; transition:color .2s; }
   .modal-close:hover { color:var(--text); }
-  .modal-body-text { font-size:1.05rem; line-height:1.7; color:var(--text); margin:20px 0 12px; user-select:text; -webkit-user-select:text; text-align:left; word-break:break-word; white-space:pre-wrap; overflow-wrap:break-word; }
-  .modal-reactions-row { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px; min-height:4px; }
-  .modal-react-wrap { margin-bottom:20px; }
+  .modal-body-text { font-size:0.95rem; line-height:1.6; color:var(--text); margin:10px 0 12px; user-select:text; -webkit-user-select:text; text-align:left; word-break:break-word; white-space:pre-wrap; overflow-wrap:break-word; }  .modal-reactions-row { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px; min-height:4px; }
+  .modal-react-wrap { margin-bottom:4px; }
 
   /* COMMENT */
   .comment { background:var(--surface2); border-radius:12px; padding:12px 14px; margin-bottom:10px; border:1px solid var(--border); }
@@ -222,22 +223,26 @@
 <!-- Modal -->
 <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
   <div class="modal" id="modal">
-    <button class="modal-close" onclick="closeModalDirect()">✕</button>
-    <div class="card-meta" id="modalMeta"></div>
-    <div class="modal-body-text" id="modalText"></div>
-    <div class="modal-reactions-row" id="modalReactions"></div>
-    <div class="modal-react-wrap">
-      <button class="react-btn" id="modalReactBtn" onclick="togglePickerForModal(event)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3" stroke-linecap="round"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3" stroke-linecap="round"/></svg>
-        React
-      </button>
+    <div class="modal-confession">
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+      <div class="card-meta" id="modalMeta"></div>
+      <div class="modal-body-text" id="modalText"></div>
+      <div class="modal-reactions-row" id="modalReactions"></div>
+      <div class="modal-react-wrap">
+        <button class="react-btn" id="modalReactBtn" onclick="togglePickerForModal(event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3" stroke-linecap="round"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3" stroke-linecap="round"/></svg>
+          React
+        </button>
+      </div>
     </div>
-    <div class="comments-section">
-      <h3>Comments</h3>
-      <div id="modalComments"><div class="loading"><div class="spinner"></div></div></div>
-      <div class="comment-input-row">
-        <textarea class="comment-input" id="commentInput" placeholder="Drop an anonymous comment..."></textarea>
-        <button class="comment-send" id="commentBtn" onclick="addComment()">Send</button>
+    <div class="modal-comments-wrap">
+      <div class="comments-section">
+        <h3>Comments</h3>
+        <div id="modalComments"><div class="loading"><div class="spinner"></div></div></div>
+        <div class="comment-input-row">
+          <textarea class="comment-input" id="commentInput" placeholder="Drop an anonymous comment..."></textarea>
+          <button class="comment-send" id="commentBtn" onclick="addComment()">Send</button>
+        </div>
       </div>
     </div>
   </div>
@@ -548,9 +553,8 @@
       return `<div class="card" style="animation-delay:${i*.06}s" id="crd-${d.id}" onclick="openModal('${d.id}')">
         <div class="card-meta">
           <div class="avatar" style="background:${av.bg}">${av.label}</div>
-          <span class="card-author">Anonymous</span>
+          <span class="card-author">NSUK Anonymous Message ${num}</span>
           <span class="card-time">${timeAgo(data.createdAt)}</span>
-          <span class="confession-num">#${num}</span>
         </div>
         <div class="card-body" id="cbody-${d.id}">${esc(data.text)}</div>
         <div class="read-more" id="rmore-${d.id}" onclick="event.stopPropagation();openModal('${d.id}')">Read more →</div>
@@ -598,9 +602,8 @@
     history.pushState({confessionId:id}, '', `#${num}`);
     document.getElementById('modalMeta').innerHTML=`
       <div class="avatar" style="background:${av.bg}">${av.label}</div>
-      <span style="font-size:.82rem;color:var(--muted)">Anonymous</span>
-      <span style="font-size:.75rem;color:var(--muted);opacity:.6;margin-left:auto">${timeAgo(data.createdAt)}</span>
-      <span class="confession-num">#${num}</span>`;
+      <span style="font-size:.82rem;color:var(--muted)">NSUK Anonymous Message ${num}</span>
+      <span style="font-size:.75rem;color:var(--muted);opacity:.6;margin-left:auto">${timeAgo(data.createdAt)}</span>`;
     document.getElementById('modalText').textContent = data.text;
     renderModalReactions(data);
     // Add share button to modal
