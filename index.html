@@ -196,9 +196,17 @@
 
 <div class="submit-wrap">
   <div class="submit-card" id="submitCard">
-    <textarea id="confessInput" placeholder="Type your confession, secret or hot take... 🤫&#10;No name. No trace. Just vibes."></textarea>
-    <div class="submit-row" style="justify-content:center;">
-      <button class="submit-btn" id="submitBtn" onclick="submitConfession()">Send Anonymous Message 🔒</button>
+    <div id="submitForm">
+      <textarea id="confessInput" placeholder="Type your confession, secret or hot take... 🤫&#10;No name. No trace. Just vibes."></textarea>
+      <div class="submit-row" style="justify-content:center;">
+        <button class="submit-btn" id="submitBtn" onclick="submitConfession()">Send Anonymous Message 🔒</button>
+      </div>
+    </div>
+    <div id="submitSuccess" style="display:none; text-align:center; padding:10px 0;">
+      <div style="font-size:2rem; margin-bottom:12px;">✅</div>
+      <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; margin-bottom:10px;">Message Sent!</div>
+      <div style="font-size:0.85rem; color:var(--muted); line-height:1.6; margin-bottom:20px;">Awaiting approval. To prevent spam, the admin will have to approve your anonymous message before it appears publicly.</div>
+      <button class="submit-btn" onclick="resetSubmitForm()">Send another anonymous message</button>
     </div>
   </div>
 </div>
@@ -708,7 +716,7 @@
 
   window.submitConfession = async () => {
     if(await isBlocked(userIP)){ showToast('🚫 You are blocked.'); return; }
-    if(!checkRateLimit()){ showToast('⏳ Too many confessions! Try again in an hour.'); return; }
+    if(!checkRateLimit()){ showToast('⏳ Too many messages! Try again in an hour.'); return; }
     const ta=document.getElementById('confessInput');
     const btn=document.getElementById('submitBtn');
     const text=ta.value.trim();
@@ -716,16 +724,24 @@
     if(text.length<5){ showToast('Too short! Say more 😏'); return; }
     btn.disabled=true; btn.textContent='Sending...';
     try {
-      // Check if approval mode is on
       const settingsSnap = await getDoc(doc(db,'settings','moderation'));
       const approvalOn = settingsSnap.exists() && settingsSnap.data().approvalRequired === true;
       const status = approvalOn ? 'pending' : 'approved';
       await addDoc(collection(db,'confessions'),{text,createdAt:serverTimestamp(),commentCount:0,ip:userIP,reactions:{},status,hidden:false});
       ta.value='';
-      showToast(approvalOn ? 'Message sent! Awaiting approval 🕐' : 'Message sent! 🔒');
-      window.scrollTo({top:document.querySelector('.feed-section').offsetTop-80,behavior:'smooth'});
+      // Show success state
+      document.getElementById('submitForm').style.display='none';
+      document.getElementById('submitSuccess').style.display='block';
+      if(!approvalOn) window.scrollTo({top:document.querySelector('.feed-section').offsetTop-80,behavior:'smooth'});
     } catch(e){ showToast('Error. Try again!'); }
     btn.disabled=false; btn.textContent='Send Anonymous Message 🔒';
+  };
+
+  window.resetSubmitForm = () => {
+    document.getElementById('submitForm').style.display='block';
+    document.getElementById('submitSuccess').style.display='none';
+    document.getElementById('confessInput').value='';
+    document.getElementById('confessInput').focus();
   };
 
   window.closeModal = (e) => { if(e.target===document.getElementById('modalBackdrop')){ closePicker(); closeModalDirect(); } };
