@@ -585,8 +585,13 @@
   }
 
   onSnapshot(query(collection(db,'confessions'),orderBy('createdAt','desc')), snap=>{
-    cache = snap.docs;
-    buildNumberMap(snap.docs);
+    const allDocs = snap.docs;
+    const visibleDocs = allDocs.filter(d => {
+      const data = d.data();
+      return (data.status === 'approved' || !data.status) && data.hidden !== true;
+    });
+    buildNumberMap(allDocs);
+    cache = visibleDocs;
     renderCurrentFeed();
   });
 
@@ -711,12 +716,16 @@
     if(text.length<5){ showToast('Too short! Say more 😏'); return; }
     btn.disabled=true; btn.textContent='Sending...';
     try {
-      await addDoc(collection(db,'confessions'),{text,createdAt:serverTimestamp(),commentCount:0,ip:userIP,reactions:{}});
+      // Check if approval mode is on
+      const settingsSnap = await getDoc(doc(db,'settings','moderation'));
+      const approvalOn = settingsSnap.exists() && settingsSnap.data().approvalRequired === true;
+      const status = approvalOn ? 'pending' : 'approved';
+      await addDoc(collection(db,'confessions'),{text,createdAt:serverTimestamp(),commentCount:0,ip:userIP,reactions:{},status,hidden:false});
       ta.value='';
-      showToast('Confession sent! 🔒');
+      showToast(approvalOn ? 'Message sent! Awaiting approval 🕐' : 'Message sent! 🔒');
       window.scrollTo({top:document.querySelector('.feed-section').offsetTop-80,behavior:'smooth'});
     } catch(e){ showToast('Error. Try again!'); }
-    btn.disabled=false; btn.textContent='Send Confession 🔒';
+    btn.disabled=false; btn.textContent='Send Anonymous Message 🔒';
   };
 
   window.closeModal = (e) => { if(e.target===document.getElementById('modalBackdrop')){ closePicker(); closeModalDirect(); } };
